@@ -18,14 +18,13 @@ repositories {
 }
 
 dependencies {
-//  implementation platform(group: 'org.testcontainers', name: 'testcontainers-bom', version: '1.16.3')
   implementation(group: 'ch.qos.logback', name: 'logback-core', version: '1.2.10')
 
   implementation(group: 'org.springframework.boot', name: 'spring-boot-starter-web')
   implementation(group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa')
   implementation(group: 'org.springframework.boot', name: 'spring-boot-starter-security')
 
-  implementation(group: 'org.postgresql', name: 'postgresql', version: '42.2.8')
+  implementation(group: 'org.postgresql', name: 'postgresql', version: '42.2.26')
   implementation(group: 'javax.xml.bind', name: 'jaxb-api', version: '2.3.1')
   implementation(group: 'io.jsonwebtoken', name: 'jjwt', version: '0.6.0')
 
@@ -44,13 +43,15 @@ dependencies {
   testImplementation(group: 'org.spockframework', name: 'spock-core', version: '2.0-groovy-3.0')
   testImplementation(group: 'org.spockframework', name: 'spock-spring', version: '2.1-M2-groovy-3.0')
   testImplementation(group: 'org.springframework.boot', name: 'spring-boot-starter-test')
-//  testImplementation(group: 'org.testcontainers', name: 'postgresql', version: '1.16.3')
-//  testImplementation(group: 'org.testcontainers', name: 'spock', version: '1.16.3')
+
+  testImplementation(group: 'org.testcontainers', name: 'postgresql', version: '1.17.3')
+  testImplementation "org.testcontainers:spock:1.17.3"
+
 
 }
 
 group = 'pl.tchorzyksen'
-version = '1.0.0-SNAPSHOT'
+version = '0.0.2-SNAPSHOT'
 description = 'my-web-service'
 java.sourceCompatibility = JavaVersion.VERSION_17
 

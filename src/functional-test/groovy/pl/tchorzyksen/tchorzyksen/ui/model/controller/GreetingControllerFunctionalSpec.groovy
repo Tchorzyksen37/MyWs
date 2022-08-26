@@ -8,7 +8,7 @@ import pl.tchorzyksen.entity.GreetingEntity
 
 class GreetingControllerFunctionalSpec extends AbstractFunctionalSpec {
 
-  void "get #requestParam greeting #result "() {
+  void "get #requestParam greeting #result "(String requestParam, String result) {
     given: "uri"
     String uri = requestParam == null ? "/greeting" : "/greeting?name=${requestParam}"
 
