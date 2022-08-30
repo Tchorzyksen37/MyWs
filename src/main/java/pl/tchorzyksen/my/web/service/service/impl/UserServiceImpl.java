@@ -5,12 +5,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 import pl.tchorzyksen.my.web.service.entities.UserEntity;
 import pl.tchorzyksen.my.web.service.model.dto.UserDto;
 import pl.tchorzyksen.my.web.service.repositories.UserRepository;
@@ -53,7 +55,7 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  public UserDto getUser(String email) {
+  public UserDto getUserByEmail(String email) {
     UserEntity userEntity = userRepository.findUserByEmail(email);
 
     if (userEntity == null) throw new UsernameNotFoundException(email);
@@ -62,6 +64,15 @@ public class UserServiceImpl implements UserService {
     BeanUtils.copyProperties(userEntity, userDto);
 
     return userDto;
+  }
+
+  @Override
+  public UserDto getUserById(Long id) {
+
+    UserEntity userEntity = userRepository.findById(id)
+        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+
+    return modelMapper.map(userEntity, UserDto.class);
   }
 
   @Override

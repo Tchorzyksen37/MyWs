@@ -12,11 +12,12 @@ public class PersonEntity {
 
   @Id
   @GeneratedValue
-  private long id;
+  private Long id;
 
   @Column(name = "first_name", nullable = false, length = 50)
   private String firstName;
 
   @Column(name = "last_name", nullable = false, length = 50)
   private String lastName;
+
 }

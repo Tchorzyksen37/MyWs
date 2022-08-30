@@ -5,6 +5,7 @@ plugins {
   id 'java'
   id 'groovy'
   id 'maven-publish'
+  id "org.flywaydb.flyway" version "9.2.0"
 }
 
 allprojects {
@@ -51,12 +52,6 @@ dependencies {
 
   implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 
-  compileOnly 'org.projectlombok:lombok:1.18.22'
-  annotationProcessor 'org.projectlombok:lombok:1.18.22'
-
-  testCompileOnly 'org.projectlombok:lombok:1.18.22'
-  testAnnotationProcessor 'org.projectlombok:lombok:1.18.22'
-
   testImplementation(group: 'org.codehaus.groovy', name: 'groovy-all', version: '3.0.9')
   testImplementation(group: 'org.spockframework', name: 'spock-core', version: '2.0-groovy-3.0')
   testImplementation(group: 'org.spockframework', name: 'spock-spring', version: '2.1-M2-groovy-3.0')
@@ -83,4 +78,11 @@ publishing {
 
 tasks.withType(JavaCompile) {
   options.encoding = 'UTF-8'
+}
+
+flyway {
+  url = 'jdbc:postgresql://localhost:5432/scratchpad'
+  user = 'scratchpad'
+  password = 'scratchpad'
+  schemas = ['scratchpad']
 }

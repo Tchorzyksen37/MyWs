@@ -19,7 +19,7 @@ public class UserEntity implements Serializable {
 
   @Id
   @GeneratedValue
-  private long id;
+  private Long id;
 
   @Column(name = "user_id", nullable = false)
   private String userId;
