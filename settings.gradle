@@ -1,1 +1,2 @@
 rootProject.name = 'my-web-service'
+include 'my-web-service-api'
