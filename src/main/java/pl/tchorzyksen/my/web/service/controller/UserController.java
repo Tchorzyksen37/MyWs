@@ -28,6 +28,12 @@ public class UserController {
 
   private final ModelMapper modelMapper = new ModelMapper();
 
+  {
+    var typeMap = modelMapper.typeMap(UserRequest.class, UserDto.class);
+    typeMap.addMappings(mapper -> mapper.skip(UserDto::setId));
+    typeMap.addMappings(mapper -> mapper.skip(UserDto::setUserId));
+  }
+
   @GetMapping("/{id}")
   public ResponseEntity<UserResponse> getUser(@PathVariable Long id) {
     UserDto userDto = userService.getUserById(id);
@@ -49,9 +55,17 @@ public class UserController {
         modelMapper.map(userService.createUser(userDto), UserResponse.class), HttpStatus.CREATED);
   }
 
-  @PutMapping
-  public String updateUser() {
-    return "Update user method invoked.";
+  @PutMapping("/{id}")
+  public ResponseEntity<UserResponse> updateUser(@PathVariable Long id, @RequestBody UserRequest userRequest) {
+
+    log.debug("UserRequest {}", userRequest);
+    UserDto userDto = modelMapper.map(userRequest, UserDto.class);
+    log.debug("UserDto {}", userDto);
+    UserDto updatedUserDto = userService.updateUser(id, userDto);
+    log.debug("Updated UserDto {}", updatedUserDto);
+    UserResponse userResponse = modelMapper.map(updatedUserDto, UserResponse.class);
+    log.debug("User Response {}", userResponse);
+    return ResponseEntity.ok(userResponse);
   }
 
   @DeleteMapping

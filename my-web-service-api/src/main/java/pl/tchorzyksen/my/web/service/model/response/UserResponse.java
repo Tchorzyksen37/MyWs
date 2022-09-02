@@ -12,4 +12,7 @@ public class UserResponse {
   private PersonResponse person;
 
   private String email;
+
+  private Long businessUnitId;
+
 }

@@ -13,8 +13,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
+import pl.tchorzyksen.my.web.service.entities.BusinessUnitEntity;
 import pl.tchorzyksen.my.web.service.entities.UserEntity;
 import pl.tchorzyksen.my.web.service.model.dto.UserDto;
+import pl.tchorzyksen.my.web.service.repositories.BusinessUnitRepository;
 import pl.tchorzyksen.my.web.service.repositories.UserRepository;
 import pl.tchorzyksen.my.web.service.service.UserService;
 import pl.tchorzyksen.my.web.service.shared.Utils;
@@ -28,12 +30,21 @@ public class UserServiceImpl implements UserService {
   private UserRepository userRepository;
 
   @Autowired
+  private BusinessUnitRepository businessUnitRepository;
+
+  @Autowired
   private Utils utils;
 
   @Autowired
   private BCryptPasswordEncoder bCryptPasswordEncoder;
 
   private final ModelMapper modelMapper = new ModelMapper();
+
+  {
+    modelMapper.getConfiguration().setSkipNullEnabled(true);
+    var typeMap = modelMapper.typeMap(UserEntity.class, UserDto.class);
+    typeMap.addMapping(src -> src.getBusinessUnitEntity().getId(), UserDto::setBusinessUnitId);
+  }
 
   @Override
   public UserDto createUser(UserDto userDto) {
@@ -73,6 +84,30 @@ public class UserServiceImpl implements UserService {
         .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
     return modelMapper.map(userEntity, UserDto.class);
+  }
+
+  @Override
+  public UserDto updateUser(Long id, UserDto userDto) {
+    UserEntity userEntityInDb = userRepository.findById(id)
+        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+
+    log.debug("Found UserEntity {}", userEntityInDb);
+
+    modelMapper.map(userDto, userEntityInDb);
+    if (userDto.getBusinessUnitId() != null) {
+      BusinessUnitEntity businessUnitEntity = businessUnitRepository.findById(userDto.getBusinessUnitId())
+          .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+
+      userEntityInDb.setBusinessUnitEntity(businessUnitEntity);
+    }
+
+    log.debug("UserEntity update with {}", userEntityInDb);
+
+    UserEntity savedUserEntity = userRepository.save(userEntityInDb);
+
+    log.debug("Saved UserEntity {}", savedUserEntity);
+
+    return modelMapper.map(savedUserEntity, UserDto.class);
   }
 
   @Override
