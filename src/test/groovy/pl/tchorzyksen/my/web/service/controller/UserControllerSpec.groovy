@@ -1,7 +1,9 @@
 package pl.tchorzyksen.my.web.service.controller
 
+import org.modelmapper.ModelMapper
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import pl.tchorzyksen.my.web.service.configuration.ModelMapperConfiguration
 import pl.tchorzyksen.my.web.service.model.dto.PersonDto
 import pl.tchorzyksen.my.web.service.model.dto.UserDto
 import pl.tchorzyksen.my.web.service.model.request.PersonRequest
@@ -12,16 +14,16 @@ import spock.lang.Specification
 
 class UserControllerSpec extends Specification {
 
+  ModelMapper modelMapper = new ModelMapperConfiguration().modelMapper()
+
   UserService userService = Mock(UserService.class)
 
-  UserController userController = new UserController(userService: userService)
+  UserController userController = new UserController(userService: userService, modelMapper: modelMapper)
 
   def "Request is correctly mapped and passed to service"() {
     given: "User request model"
-    UserRequest model = new UserRequest()
-    model.setEmail("test@domain.com")
-    model.setPerson(new PersonRequest(firstName: "firstName", lastName: "lastName"))
-    model.setPassword("test")
+    UserRequest model = new UserRequest(email: "test@domain.com",
+        person: new PersonRequest(firstName: "firstName", lastName: "lastName"), password: "test", businessUnitId: null)
 
     when:
     ResponseEntity<UserResponse> response = userController.createUser(model)

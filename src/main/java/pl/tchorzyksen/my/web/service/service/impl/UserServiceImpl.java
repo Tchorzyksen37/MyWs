@@ -38,13 +38,8 @@ public class UserServiceImpl implements UserService {
   @Autowired
   private BCryptPasswordEncoder bCryptPasswordEncoder;
 
-  private final ModelMapper modelMapper = new ModelMapper();
-
-  {
-    modelMapper.getConfiguration().setSkipNullEnabled(true);
-    var typeMap = modelMapper.typeMap(UserEntity.class, UserDto.class);
-    typeMap.addMapping(src -> src.getBusinessUnitEntity().getId(), UserDto::setBusinessUnitId);
-  }
+  @Autowired
+  private ModelMapper modelMapper;
 
   @Override
   public UserDto createUser(UserDto userDto) {
@@ -52,13 +47,18 @@ public class UserServiceImpl implements UserService {
     if (userRepository.findUserByEmail(userDto.getEmail()) != null)
       throw new RuntimeException("Record already exists");
 
-    log.info("UserDto {}", userDto);
     UserEntity userEntity = modelMapper.map(userDto, UserEntity.class);
-    log.info("UserEntity: {}", userEntity);
+
+    if (userDto.getBusinessUnitId() != null) {
+      userEntity.setBusinessUnitEntity(businessUnitRepository.findById(userDto.getBusinessUnitId())
+          .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND)));
+    }
 
     String publicUserId = utils.generateUserId(30);
     userEntity.setUserId(publicUserId);
     userEntity.setEncryptedPassword(bCryptPasswordEncoder.encode(userDto.getPassword()));
+
+    log.info("UserDto {} is mapped to UserEntity: {}", userDto, userEntity);
 
     UserEntity storedUser = userRepository.save(userEntity);
 
