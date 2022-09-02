@@ -7,6 +7,8 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import lombok.Data;
 
@@ -26,6 +28,10 @@ public class UserEntity implements Serializable {
 
   @OneToOne(cascade = CascadeType.ALL)
   private PersonEntity person;
+
+  @ManyToOne
+  @JoinColumn(name = "business_unit_id", referencedColumnName = "id")
+  private BusinessUnitEntity businessUnitEntity;
 
   @Column(name = "email", nullable = false, length = 120, unique = true)
   private String email;
