@@ -10,7 +10,7 @@ public class UserDto implements Serializable {
   @Serial
   private static final long serialVersionUID = 1L;
 
-  private long id;
+  private Long id;
 
   private String userId;
 
@@ -25,4 +25,6 @@ public class UserDto implements Serializable {
   private String emailVerificationToken;
 
   private Boolean emailVerificationStatus = false;
+
+  private Long businessUnitId;
 }
