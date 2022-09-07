@@ -26,13 +26,8 @@ public class UserController {
   @Autowired
   private UserService userService;
 
-  private final ModelMapper modelMapper = new ModelMapper();
-
-  {
-    var typeMap = modelMapper.typeMap(UserRequest.class, UserDto.class);
-    typeMap.addMappings(mapper -> mapper.skip(UserDto::setId));
-    typeMap.addMappings(mapper -> mapper.skip(UserDto::setUserId));
-  }
+  @Autowired
+  private ModelMapper modelMapper;
 
   @GetMapping("/{id}")
   public ResponseEntity<UserResponse> getUser(@PathVariable Long id) {

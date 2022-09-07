@@ -23,7 +23,8 @@ public class BusinessUnitController {
   @Autowired
   private BusinessUnitRepository businessUnitRepository;
 
-  private final ModelMapper modelMapper = new ModelMapper();
+  @Autowired
+  private ModelMapper modelMapper;
 
   @PostMapping
   public ResponseEntity<BusinessUnitResponse> createBusinessUnit(@RequestBody BusinessUnitRequest businessUnitRequest) {
