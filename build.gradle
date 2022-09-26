@@ -66,6 +66,7 @@ dependencies {
 project(":email-sender-service") {
   dependencies {
     implementation(group: 'org.springframework.boot', name: 'spring-boot-starter-web')
+    implementation(group: 'org.springframework.boot', name: 'spring-boot-starter-mail')
   }
 }
 
