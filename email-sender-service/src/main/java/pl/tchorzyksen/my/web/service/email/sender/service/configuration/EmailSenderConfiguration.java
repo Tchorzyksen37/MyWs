@@ -1,5 +1,7 @@
 package pl.tchorzyksen.my.web.service.email.sender.service.configuration;
 
+import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.Properties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,6 +18,10 @@ public class EmailSenderConfiguration {
     mailSender.setPort(587);
 
     mailSender.setUsername("tchorzyksen@gmail.com");
+    Optional<String> password = Optional.ofNullable(System.getProperty("smtpPassword"));
+    mailSender.setPassword(password.orElseThrow(() -> {
+      throw new NoSuchElementException("Password for SMTP does not exist.");
+    }));
 
     Properties props = mailSender.getJavaMailProperties();
     props.put("mail.transport.protocol", "smtp");
