@@ -12,7 +12,7 @@ import pl.tchorzyksen.my.web.service.service.UserService;
 @EnableWebSecurity
 public class WebSecurity extends WebSecurityConfigurerAdapter {
 
-  private static final String[] ACCESSIBLE_ENDPOINTS = {"/greeting/**"};
+  private static final String[] ACCESSIBLE_ENDPOINTS = {"/greeting/**", "/error/**", "/favicon.ico"};
 
   private final UserService userService;
 

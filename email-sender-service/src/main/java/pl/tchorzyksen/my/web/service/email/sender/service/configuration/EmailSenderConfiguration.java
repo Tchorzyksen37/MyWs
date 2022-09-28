@@ -1,4 +1,4 @@
-package pl.tchorzyksen.my.web.service.email.sender.service;
+package pl.tchorzyksen.my.web.service.email.sender.service.configuration;
 
 import java.util.Properties;
 import org.springframework.context.annotation.Bean;
