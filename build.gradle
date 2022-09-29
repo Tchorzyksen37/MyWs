@@ -94,4 +94,6 @@ flyway {
   user = 'scratchpad'
   password = 'scratchpad'
   schemas = ['scratchpad']
+  locations = ['filesystem:src/main/resources/db/migration']
+  cleanDisabled = false
 }

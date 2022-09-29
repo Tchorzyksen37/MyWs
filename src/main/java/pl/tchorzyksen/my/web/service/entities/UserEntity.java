@@ -44,4 +44,8 @@ public class UserEntity implements Serializable {
 
   @Column(name = "email_verification_status", nullable = false)
   private Boolean emailVerificationStatus = false;
+
+  @Column(name = "is_active", nullable = false)
+  private Boolean isActive = false;
+
 }
