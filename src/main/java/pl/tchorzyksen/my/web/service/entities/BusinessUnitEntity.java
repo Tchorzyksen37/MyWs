@@ -3,7 +3,6 @@ package pl.tchorzyksen.my.web.service.entities;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import lombok.Data;
 
@@ -12,7 +11,7 @@ import lombok.Data;
 public class BusinessUnitEntity {
 
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @GeneratedValue
   private long id;
 
   @Column
