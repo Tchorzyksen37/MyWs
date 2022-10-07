@@ -46,3 +46,8 @@ Example:
 curl --location --request GET 'http://localhost:8080/user/' \
 --header 'Authorization: Bearer Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0Y2hvcnp5a3NlbkBnbWFpbC5jb20iLCJleHAiOjE2NDY0OTkxNTJ9.KRwm7bKAg494ngelJL8OJyGdx1SZFAn72_bMY6lwdYzZjM7IEnY5MbHS-pkWuU07B5fSrZ02HAvFkJOqiOhviw'
 ```
+
+New functionalities 
+- send email based on html template with dynamic variables 
+- serves gif media type
+- add flyway support (Evolutionary Database Design)
