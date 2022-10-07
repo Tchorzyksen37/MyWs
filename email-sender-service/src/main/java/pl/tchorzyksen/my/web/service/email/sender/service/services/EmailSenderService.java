@@ -4,21 +4,25 @@ import java.io.IOException;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Multipart;
+import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 import pl.tchorzyksen.my.web.service.email.sender.service.TemplateProcessor;
+import pl.tchorzyksen.my.web.service.email.sender.service.configuration.EmailProperties;
 
 @Service
+@AllArgsConstructor
 public class EmailSenderService {
-  @Autowired
-  private JavaMailSender emailSender;
 
-  @Autowired
-  private TemplateProcessor templateProcessor;
+  private final JavaMailSender emailSender;
+
+  private final TemplateProcessor templateProcessor;
+
+  private final EmailProperties emailProperties;
 
   public void sendSimpleMessage() throws IOException {
 
@@ -27,9 +31,13 @@ public class EmailSenderService {
       messageBodyPart.setContent(templateProcessor.processTemplate(), "text/html; charset=utf-8");
 
       MimeMessage message = emailSender.createMimeMessage();
+      message.setFrom(new InternetAddress(emailProperties.getFrom(), emailProperties.getSenderInfo()));
+
       message.addRecipients(Message.RecipientType.TO, "evife2@gmail.com");
+
       message.setSubject("TEST - send email using Java");
       message.setText("This is the test.");
+
       Multipart multipart = new MimeMultipart();
 
       multipart.addBodyPart(messageBodyPart);
