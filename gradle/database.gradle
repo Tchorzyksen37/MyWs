@@ -1,0 +1,11 @@
+dependencies {
+  implementation(group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa')
+  implementation(group: 'org.postgresql', name: 'postgresql', version: '42.2.26')
+}
+
+flyway {
+  url = 'jdbc:postgresql://localhost:5432/scratchpad'
+  user = 'scratchpad'
+  password = 'scratchpad'
+  schemas = ['scratchpad']
+}

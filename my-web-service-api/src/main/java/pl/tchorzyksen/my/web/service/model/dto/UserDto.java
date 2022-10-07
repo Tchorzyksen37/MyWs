@@ -27,4 +27,6 @@ public class UserDto implements Serializable {
   private Boolean emailVerificationStatus = false;
 
   private Long businessUnitId;
+
+  private Boolean isActive = false;
 }
