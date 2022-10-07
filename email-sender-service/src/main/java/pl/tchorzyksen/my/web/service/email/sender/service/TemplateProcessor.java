@@ -7,20 +7,20 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.util.Map;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
+@AllArgsConstructor
 public class TemplateProcessor {
 
-  @Autowired
-  private Configuration freemarkerTemplateConfiguration;
+  private final Configuration freemarkerTemplateConfiguration;
 
   private static final String EMAIL_TEMPLATE_NAME = "hello.ftl";
 
-  private static final Map<String, Object> DATA_MODEL = Map.of("name", "test");
+  private static final Map<String, Object> DATA_MODEL = Map.of("name", "This is the test ( ͡° ͜ʖ ͡°)");
 
   public String processTemplate() throws IOException {
 
