@@ -7,15 +7,20 @@ import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
+@Slf4j
 public class AuthorizationFilter extends BasicAuthenticationFilter {
 
-  public AuthorizationFilter(AuthenticationManager authenticationManager) {
+  private final String tokenSecret;
+
+  public AuthorizationFilter(AuthenticationManager authenticationManager, String tokenSecret) {
     super(authenticationManager);
+    this.tokenSecret = tokenSecret;
   }
 
   @Override
@@ -41,13 +46,15 @@ public class AuthorizationFilter extends BasicAuthenticationFilter {
     if (token != null) {
       token = token.replace(SecurityConstants.TOKEN_PREFIX, "");
 
+      log.debug("JWT token: {}", token);
       String user =
           Jwts.parser()
-              .setSigningKey(SecurityConstants.getTokenSecret())
+              .setSigningKey(tokenSecret)
               .parseClaimsJws(token)
               .getBody()
               .getSubject();
 
+      log.debug("User: {}", user);
       if (user != null) {
         return new UsernamePasswordAuthenticationToken(user, null, new ArrayList<>());
       }
@@ -55,6 +62,7 @@ public class AuthorizationFilter extends BasicAuthenticationFilter {
       return null;
     }
 
+    log.debug("JWToken not found - cannot authorize");
     return null;
   }
 }
