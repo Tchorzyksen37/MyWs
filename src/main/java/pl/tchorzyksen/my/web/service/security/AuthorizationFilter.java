@@ -1,8 +1,14 @@
 package pl.tchorzyksen.my.web.service.security;
 
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.SignatureException;
+import io.jsonwebtoken.UnsupportedJwtException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Optional;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -44,25 +50,32 @@ public class AuthorizationFilter extends BasicAuthenticationFilter {
     String token = request.getHeader(SecurityConstants.HEADER_STRING);
 
     if (token != null) {
+      log.debug("JWT token: {}", token);
       token = token.replace(SecurityConstants.TOKEN_PREFIX, "");
 
-      log.debug("JWT token: {}", token);
-      String user =
-          Jwts.parser()
-              .setSigningKey(tokenSecret)
-              .parseClaimsJws(token)
-              .getBody()
-              .getSubject();
+      String user = getJwtClaims(token).map(Claims::getSubject).orElse(null);
 
-      log.debug("User: {}", user);
       if (user != null) {
+        log.debug("User: {}", user);
         return new UsernamePasswordAuthenticationToken(user, null, new ArrayList<>());
       }
 
-      return null;
+    }
+    log.debug("Token not found in request headers");
+    return null;
+  }
+
+  private Optional<Claims> getJwtClaims(String token) {
+    try {
+      return Optional.of(Jwts.parser()
+          .setSigningKey(tokenSecret)
+          .parseClaimsJws(token)
+          .getBody());
+    } catch (ExpiredJwtException | UnsupportedJwtException | MalformedJwtException | SignatureException |
+             IllegalArgumentException e) {
+      log.debug("Authorization failed with message {}", e.getMessage());
     }
 
-    log.debug("JWToken not found - cannot authorize");
-    return null;
+    return Optional.empty();
   }
 }
