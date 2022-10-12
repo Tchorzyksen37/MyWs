@@ -1,13 +1,5 @@
 package pl.tchorzyksen.my.web.service.model.request;
 
-import lombok.Getter;
-import lombok.Setter;
+public record UserLoginRequest(String email, String password) {
 
-@Getter
-@Setter
-public class UserLoginRequest {
-
-  private String email;
-
-  private String password;
 }

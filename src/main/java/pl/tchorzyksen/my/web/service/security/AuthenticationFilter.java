@@ -9,6 +9,7 @@ import java.util.Date;
 import javax.servlet.FilterChain;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -16,16 +17,20 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import pl.tchorzyksen.my.web.service.SpringApplicationContext;
+import pl.tchorzyksen.my.web.service.model.dto.UserDto;
 import pl.tchorzyksen.my.web.service.model.request.UserLoginRequest;
 import pl.tchorzyksen.my.web.service.service.UserService;
-import pl.tchorzyksen.my.web.service.model.dto.UserDto;
 
+@Slf4j
 public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
   private final AuthenticationManager authenticationManager;
 
-  public AuthenticationFilter(AuthenticationManager authenticationManager) {
+  private final String tokenSecret;
+
+  public AuthenticationFilter(AuthenticationManager authenticationManager, String tokenSecret) {
     this.authenticationManager = authenticationManager;
+    this.tokenSecret = tokenSecret;
   }
 
   @Override
@@ -38,7 +43,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
       return authenticationManager.authenticate(
           new UsernamePasswordAuthenticationToken(
-              creds.getEmail(), creds.getPassword(), new ArrayList<>()));
+              creds.email(), creds.password(), new ArrayList<>()));
 
     } catch (IOException e) {
       throw new RuntimeException(e);
@@ -58,7 +63,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
         Jwts.builder()
             .setSubject(userName)
             .setExpiration(new Date(System.currentTimeMillis() + SecurityConstants.EXPIRATION_TIME))
-            .signWith(SignatureAlgorithm.HS512, SecurityConstants.getTokenSecret())
+            .signWith(SignatureAlgorithm.HS512, tokenSecret)
             .compact();
 
     UserService userService = (UserService) SpringApplicationContext.getBean("userServiceImpl");

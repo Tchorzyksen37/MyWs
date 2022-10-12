@@ -4,7 +4,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import pl.tchorzyksen.my.web.service.security.AppProperties;
+import pl.tchorzyksen.my.web.service.configuration.AppProperties;
 
 @SpringBootApplication
 public class MyWebService {

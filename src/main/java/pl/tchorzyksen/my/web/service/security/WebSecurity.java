@@ -1,5 +1,6 @@
 package pl.tchorzyksen.my.web.service.security;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -14,6 +15,8 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
 
   private static final String[] ACCESSIBLE_ENDPOINTS = {"/logo/**", "/greeting/**", "/error/**", "/favicon.ico"};
 
+  @Value("${app.security.tokenSecret}")
+  private String tokenSecret;
   private final UserService userService;
 
   private final BCryptPasswordEncoder bCryptPasswordEncoder;
@@ -43,14 +46,14 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
         .csrf()
         .disable()
         .addFilter(getAuthenticationFilter())
-        .addFilter(new AuthorizationFilter(authenticationManager()))
+        .addFilter(new AuthorizationFilter(authenticationManager(), tokenSecret))
         .sessionManagement()
         .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
   }
 
   public AuthenticationFilter getAuthenticationFilter() throws Exception {
 
-    final AuthenticationFilter filter = new AuthenticationFilter(authenticationManager());
+    final AuthenticationFilter filter = new AuthenticationFilter(authenticationManager(), tokenSecret);
     filter.setFilterProcessesUrl("/user/login");
     return filter;
   }
