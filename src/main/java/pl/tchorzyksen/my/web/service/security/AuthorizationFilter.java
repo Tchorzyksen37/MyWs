@@ -53,9 +53,9 @@ public class AuthorizationFilter extends BasicAuthenticationFilter {
       log.debug("JWT token: {}", token);
       token = token.replace(SecurityConstants.TOKEN_PREFIX, "");
 
-      String user = getJwtClaims(token).map(Claims::getSubject).orElse(null);
+      Optional<String> user = getJwtClaims(token).map(Claims::getSubject);
 
-      if (user != null) {
+      if (user.isPresent()) {
         log.debug("User: {}", user);
         return new UsernamePasswordAuthenticationToken(user, null, new ArrayList<>());
       }
