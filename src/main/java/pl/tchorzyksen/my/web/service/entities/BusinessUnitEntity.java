@@ -1,20 +1,35 @@
 package pl.tchorzyksen.my.web.service.entities;
 
+import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import lombok.Data;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+import org.hibernate.Hibernate;
 
-@Data
+@Getter
+@Setter
+@ToString
+@RequiredArgsConstructor
 @Entity(name = "business_units")
-public class BusinessUnitEntity {
-
-  @Id
-  @GeneratedValue
-  private long id;
+public class BusinessUnitEntity extends AbstractEntity {
 
   @Column
   private String name;
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+    BusinessUnitEntity that = (BusinessUnitEntity) o;
+    return getId() != null && Objects.equals(getId(), that.getId());
+  }
+
+  @Override
+  public int hashCode() {
+    return getClass().hashCode();
+  }
 
 }
