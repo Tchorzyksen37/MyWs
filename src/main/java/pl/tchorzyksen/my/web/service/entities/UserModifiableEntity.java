@@ -20,7 +20,7 @@ import org.hibernate.Hibernate;
 @ToString
 @RequiredArgsConstructor
 @Entity(name = "users")
-public class UserEntity extends AbstractEntity implements Serializable {
+public class UserModifiableEntity extends AbstractModifiableEntity implements Serializable {
 
   @Serial
   private static final long serialVersionUID = 1L;
@@ -57,7 +57,7 @@ public class UserEntity extends AbstractEntity implements Serializable {
   public boolean equals(Object o) {
     if (this == o) return true;
     if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
-    UserEntity that = (UserEntity) o;
+    UserModifiableEntity that = (UserModifiableEntity) o;
     return this.getId() != null && Objects.equals(this.getId(), that.getId());
   }
 

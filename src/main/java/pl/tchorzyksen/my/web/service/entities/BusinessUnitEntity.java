@@ -14,7 +14,7 @@ import org.hibernate.Hibernate;
 @ToString
 @RequiredArgsConstructor
 @Entity(name = "business_units")
-public class BusinessUnitEntity extends AbstractEntity {
+public class BusinessUnitEntity extends AbstractModifiableEntity {
 
   @Column
   private String name;

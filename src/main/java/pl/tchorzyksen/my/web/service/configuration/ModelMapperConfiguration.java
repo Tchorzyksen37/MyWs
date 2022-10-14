@@ -3,7 +3,7 @@ package pl.tchorzyksen.my.web.service.configuration;
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import pl.tchorzyksen.my.web.service.entities.UserEntity;
+import pl.tchorzyksen.my.web.service.entities.UserModifiableEntity;
 import pl.tchorzyksen.my.web.service.model.dto.UserDto;
 import pl.tchorzyksen.my.web.service.model.request.UserRequest;
 
@@ -20,7 +20,7 @@ public class ModelMapperConfiguration {
         .addMappings(mapper -> mapper.skip(UserDto::setId))
         .addMappings(mapper -> mapper.skip(UserDto::setUserId));
 
-    modelMapper.typeMap(UserEntity.class, UserDto.class)
+    modelMapper.typeMap(UserModifiableEntity.class, UserDto.class)
         .addMapping(src -> src.getBusinessUnitEntity().getId(), UserDto::setBusinessUnitId);
 
 

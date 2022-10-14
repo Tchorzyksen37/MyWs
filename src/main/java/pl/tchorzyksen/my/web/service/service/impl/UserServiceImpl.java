@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 import pl.tchorzyksen.my.web.service.entities.BusinessUnitEntity;
-import pl.tchorzyksen.my.web.service.entities.UserEntity;
+import pl.tchorzyksen.my.web.service.entities.UserModifiableEntity;
 import pl.tchorzyksen.my.web.service.model.dto.UserDto;
 import pl.tchorzyksen.my.web.service.repositories.BusinessUnitRepository;
 import pl.tchorzyksen.my.web.service.repositories.UserRepository;
@@ -47,7 +47,7 @@ public class UserServiceImpl implements UserService {
     if (userRepository.findUserByEmail(userDto.getEmail()) != null)
       throw new RuntimeException("Record already exists");
 
-    UserEntity userEntity = modelMapper.map(userDto, UserEntity.class);
+    UserModifiableEntity userEntity = modelMapper.map(userDto, UserModifiableEntity.class);
 
     if (userDto.getBusinessUnitId() != null) {
       userEntity.setBusinessUnitEntity(businessUnitRepository.findById(userDto.getBusinessUnitId())
@@ -60,14 +60,14 @@ public class UserServiceImpl implements UserService {
 
     log.info("UserDto {} is mapped to UserEntity: {}", userDto, userEntity);
 
-    UserEntity storedUser = userRepository.save(userEntity);
+    UserModifiableEntity storedUser = userRepository.save(userEntity);
 
     return modelMapper.map(storedUser, UserDto.class);
   }
 
   @Override
   public UserDto getUserByEmail(String email) {
-    UserEntity userEntity = userRepository.findUserByEmail(email);
+    UserModifiableEntity userEntity = userRepository.findUserByEmail(email);
 
     if (userEntity == null) throw new UsernameNotFoundException(email);
 
@@ -80,7 +80,7 @@ public class UserServiceImpl implements UserService {
   @Override
   public UserDto getUserById(Long id) {
 
-    UserEntity userEntity = userRepository.findById(id)
+    UserModifiableEntity userEntity = userRepository.findById(id)
         .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
     return modelMapper.map(userEntity, UserDto.class);
@@ -88,7 +88,7 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public UserDto updateUser(Long id, UserDto userDto) {
-    UserEntity userEntityInDb = userRepository.findById(id)
+    UserModifiableEntity userEntityInDb = userRepository.findById(id)
         .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
     log.debug("Found UserEntity {}", userEntityInDb);
@@ -103,7 +103,7 @@ public class UserServiceImpl implements UserService {
 
     log.debug("UserEntity update with {}", userEntityInDb);
 
-    UserEntity savedUserEntity = userRepository.save(userEntityInDb);
+    UserModifiableEntity savedUserEntity = userRepository.save(userEntityInDb);
 
     log.debug("Saved UserEntity {}", savedUserEntity);
 
@@ -113,7 +113,7 @@ public class UserServiceImpl implements UserService {
   @Override
   public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 
-    UserEntity userEntity = userRepository.findUserByEmail(email);
+    UserModifiableEntity userEntity = userRepository.findUserByEmail(email);
 
     if (userEntity == null) throw new UsernameNotFoundException(email);
 

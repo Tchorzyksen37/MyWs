@@ -7,7 +7,7 @@ import javax.persistence.Enumerated;
 import pl.tchorzyksen.my.web.service.model.Country;
 
 @Entity(name = "addresses")
-public class AddressEntity extends AbstractEntity {
+public class AddressEntity extends AbstractModifiableEntity {
 
   @Column(name = "street")
   private String street;
