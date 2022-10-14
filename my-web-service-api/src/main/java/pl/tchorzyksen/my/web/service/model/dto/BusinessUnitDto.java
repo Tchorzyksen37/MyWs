@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 import lombok.Data;
 
 @Data
-public class PersonDto {
+public class BusinessUnitDto {
 
   private Long id;
 
@@ -14,7 +14,6 @@ public class PersonDto {
 
   private LocalDateTime lastModifiedDateTime;
 
-  private String firstName;
+  private String name;
 
-  private String lastName;
 }

@@ -11,10 +11,10 @@ import org.hibernate.Hibernate;
 
 @Getter
 @Setter
-@ToString
+@ToString(callSuper = true)
 @RequiredArgsConstructor
 @Entity(name = "persons")
-public class PersonEntity extends AbstractModifiableEntity {
+public class PersonEntity extends AbstractEntity<Long> {
 
   @Column(name = "first_name", nullable = false, length = 50)
   private String firstName;

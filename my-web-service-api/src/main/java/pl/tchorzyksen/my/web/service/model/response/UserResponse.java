@@ -1,18 +1,28 @@
 package pl.tchorzyksen.my.web.service.model.response;
 
-import lombok.Getter;
-import lombok.Setter;
+import java.time.LocalDateTime;
+import lombok.Data;
+import pl.tchorzyksen.my.web.service.model.Address;
 
-@Getter
-@Setter
+@Data
 public class UserResponse {
+
+  private Long id;
+
+  private Long version;
+
+  private LocalDateTime createdDateTime;
+
+  private LocalDateTime lastModifiedDateTime;
 
   private String userId;
 
   private PersonResponse person;
 
+  private BusinessUnitResponse businessUnit;
+
   private String email;
 
-  private Long businessUnitId;
+  private Address address;
 
 }

@@ -1,5 +1,7 @@
 package pl.tchorzyksen.my.web.service.controller;
 
+import java.util.Set;
+import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +19,7 @@ import pl.tchorzyksen.my.web.service.model.dto.UserDto;
 import pl.tchorzyksen.my.web.service.model.request.UserRequest;
 import pl.tchorzyksen.my.web.service.model.response.UserResponse;
 import pl.tchorzyksen.my.web.service.service.UserService;
+import pl.tchorzyksen.my.web.service.service.impl.BusinessUnitServiceImpl;
 
 @Slf4j
 @RestController
@@ -27,39 +30,51 @@ public class UserController {
   private UserService userService;
 
   @Autowired
+  private BusinessUnitServiceImpl businessUnitService;
+
+  @Autowired
   private ModelMapper modelMapper;
+
+  @GetMapping
+  public ResponseEntity<Set<UserResponse>> getUsers() {
+    Set<UserResponse> userResponses = userService.getAllUsers().stream().map(this::mapToResponse).collect(Collectors.toSet());
+    return ResponseEntity.ok(userResponses);
+  }
 
   @GetMapping("/{id}")
   public ResponseEntity<UserResponse> getUser(@PathVariable Long id) {
-    UserDto userDto = userService.getUserById(id);
 
-    return new ResponseEntity<>(
-        modelMapper.map(userDto, UserResponse.class), HttpStatus.OK);
+    log.debug("Fetch user with id: {}", id);
+    UserResponse userResponse = mapToResponse(userService.getUserById(id));
+
+    return new ResponseEntity<>(userResponse, HttpStatus.OK);
   }
 
   @PostMapping
   public ResponseEntity<UserResponse> createUser(@RequestBody UserRequest userRequest) {
 
-    log.info("UserRequest {}", userRequest);
+    log.debug("Create user request {}", userRequest);
 
-    UserDto userDto = modelMapper.map(userRequest, UserDto.class);
+    UserDto userDto = mapToDto(userRequest);
+    setBusinessUnitOnDto(userDto, userRequest.getBusinessUnitId());
 
-    log.debug("UserDto {}", userDto);
+    UserResponse userResponse = mapToResponse(userService.createUser(userDto));
 
-    return new ResponseEntity<>(
-        modelMapper.map(userService.createUser(userDto), UserResponse.class), HttpStatus.CREATED);
+    return new ResponseEntity<>(userResponse, HttpStatus.CREATED);
+
   }
 
   @PutMapping("/{id}")
   public ResponseEntity<UserResponse> updateUser(@PathVariable Long id, @RequestBody UserRequest userRequest) {
 
-    log.debug("UserRequest {}", userRequest);
-    UserDto userDto = modelMapper.map(userRequest, UserDto.class);
-    log.debug("UserDto {}", userDto);
+    log.debug("Update user with id: {} request {}", id, userRequest);
+    UserDto userDto = mapToDto(userRequest);
+    setBusinessUnitOnDto(userDto, userRequest.getBusinessUnitId());
+
     UserDto updatedUserDto = userService.updateUser(id, userDto);
-    log.debug("Updated UserDto {}", updatedUserDto);
-    UserResponse userResponse = modelMapper.map(updatedUserDto, UserResponse.class);
-    log.debug("User Response {}", userResponse);
+
+    UserResponse userResponse = mapToResponse(updatedUserDto);
+
     return ResponseEntity.ok(userResponse);
   }
 
@@ -67,4 +82,22 @@ public class UserController {
   public String deleteUser() {
     return "Delete user method invoked.";
   }
+
+  private UserDto mapToDto(UserRequest userRequest) {
+    log.debug("Map UserDto {} to UserResponse", userRequest);
+    return modelMapper.map(userRequest, UserDto.class);
+  }
+
+  private UserResponse mapToResponse(UserDto userDto) {
+    log.debug("Map UserDto {} to UserResponse", userDto);
+    return modelMapper.map(userDto, UserResponse.class);
+  }
+
+  private void setBusinessUnitOnDto(UserDto userDto, Long businessUnitId) {
+
+    if (businessUnitId != null) {
+      userDto.setBusinessUnit(businessUnitService.getBusinessUnitById(businessUnitId));
+    }
+  }
+
 }
