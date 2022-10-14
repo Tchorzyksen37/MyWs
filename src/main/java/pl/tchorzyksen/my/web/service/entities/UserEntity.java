@@ -20,7 +20,7 @@ import org.hibernate.Hibernate;
 @ToString
 @RequiredArgsConstructor
 @Entity(name = "users")
-public class UserEntity extends AbstractEntity implements Serializable {
+public class UserEntity extends AbstractModifiableEntity implements Serializable {
 
   @Serial
   private static final long serialVersionUID = 1L;

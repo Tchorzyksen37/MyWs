@@ -14,7 +14,7 @@ import org.hibernate.Hibernate;
 @ToString
 @RequiredArgsConstructor
 @Entity(name = "persons")
-public class PersonEntity extends AbstractEntity {
+public class PersonEntity extends AbstractModifiableEntity {
 
   @Column(name = "first_name", nullable = false, length = 50)
   private String firstName;
