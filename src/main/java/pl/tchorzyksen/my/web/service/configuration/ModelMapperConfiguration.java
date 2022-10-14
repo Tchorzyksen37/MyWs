@@ -21,8 +21,10 @@ public class ModelMapperConfiguration {
         .addMappings(mapper -> mapper.skip(UserDto::setUserId));
 
     modelMapper.typeMap(UserEntity.class, UserDto.class)
-        .addMapping(src -> src.getBusinessUnitEntity().getId(), UserDto::setBusinessUnitId);
-
+        .addMapping(src -> src.getId(), UserDto::setId)
+        .addMapping(src -> src.getVersion(), UserDto::setVersion)
+        .addMapping(src -> src.getCreatedDateTime(), UserDto::setCreatedDateTime)
+        .addMapping(src -> src.getLastModifiedDateTime(), UserDto::setLastModifiedDateTime);
 
     return modelMapper;
   }

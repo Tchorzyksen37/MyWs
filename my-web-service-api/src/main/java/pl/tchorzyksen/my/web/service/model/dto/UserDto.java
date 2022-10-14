@@ -2,7 +2,9 @@ package pl.tchorzyksen.my.web.service.model.dto;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import lombok.Data;
+import pl.tchorzyksen.my.web.service.model.Address;
 
 @Data
 public class UserDto implements Serializable {
@@ -12,9 +14,19 @@ public class UserDto implements Serializable {
 
   private Long id;
 
+  private Long version;
+
+  private LocalDateTime createdDateTime;
+
+  private LocalDateTime lastModifiedDateTime;
+
   private String userId;
 
+  private Address address;
+
   private PersonDto person;
+
+  private BusinessUnitDto businessUnit;
 
   private String email;
 
@@ -25,8 +37,6 @@ public class UserDto implements Serializable {
   private String emailVerificationToken;
 
   private Boolean emailVerificationStatus = false;
-
-  private Long businessUnitId;
 
   private Boolean isActive = false;
 }

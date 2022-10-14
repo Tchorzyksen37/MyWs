@@ -1,10 +1,9 @@
-package pl.tchorzyksen.my.web.service.model.request;
+package pl.tchorzyksen.my.web.service.model;
 
 import lombok.Data;
-import pl.tchorzyksen.my.web.service.model.Country;
 
 @Data
-public class AddressRequest {
+public class Address {
 
   private String street;
 

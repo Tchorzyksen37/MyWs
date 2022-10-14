@@ -17,10 +17,10 @@ import org.hibernate.Hibernate;
 
 @Getter
 @Setter
-@ToString
+@ToString(callSuper = true)
 @RequiredArgsConstructor
 @Entity(name = "users")
-public class UserEntity extends AbstractModifiableEntity implements Serializable {
+public class UserEntity extends AbstractEntity<Long> implements Serializable {
 
   @Serial
   private static final long serialVersionUID = 1L;
