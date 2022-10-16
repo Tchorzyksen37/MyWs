@@ -87,8 +87,6 @@ public class UserServiceImpl implements UserService {
     return mapToDto(getUserEntity(userId));
   }
 
-  // FIXME: lastModifiedDateTime is not update
-  // FIXME: version is not incremented
   @Override
   public UserDto updateUser(Long id, UserDto userDto) {
     UserEntity userEntityInDb = getUserEntity(id);
