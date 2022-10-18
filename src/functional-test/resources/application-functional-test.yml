@@ -1,0 +1,25 @@
+logging:
+  level:
+    org:
+      springframework: ERROR
+      hibernate:
+        SQL: DEBUG
+        type.descriptor.sql.BasicBinder: TRACE
+
+spring:
+  datasource:
+    username: test
+    password: test
+    url: "jdbc:tc:postgresql:///test"
+  jpa:
+    database-platform: "org.hibernate.dialect.PostgreSQLDialect"
+    show-sql: true
+    hibernate.ddl-auto: create
+    properties:
+      hibernate:
+        format_sql: true
+
+app:
+  security:
+    # base64 encoded secret
+    tokenSecret: QmFzZTY0VGVzdFNlY3JldEtleQ==

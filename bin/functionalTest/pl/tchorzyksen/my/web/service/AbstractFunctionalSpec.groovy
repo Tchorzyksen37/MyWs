@@ -25,10 +25,7 @@ import spock.lang.Specification
 abstract class AbstractFunctionalSpec extends Specification {
 
   @Autowired
-  protected FunctionalTestConfiguration functionalTestConfiguration
-
-  @Autowired
-  protected ModelMapper modelMapper
+  protected ModelMapper mapper
 
   @Autowired
   private TestRestTemplate testRestTemplate
@@ -54,7 +51,7 @@ abstract class AbstractFunctionalSpec extends Specification {
     return Jwts.builder()
         .setSubject("admin")
         .setExpiration(new Date(System.currentTimeMillis() + SecurityConstants.EXPIRATION_TIME))
-        .signWith(SignatureAlgorithm.HS512, functionalTestConfiguration.getTestTokenSecret())
+        .signWith(SignatureAlgorithm.HS512, "jf9i4jgu83nfl0adc")
         .compact()
   }
 
