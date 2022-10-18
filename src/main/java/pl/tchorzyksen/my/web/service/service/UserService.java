@@ -1,6 +1,7 @@
 package pl.tchorzyksen.my.web.service.service;
 
-import java.util.Set;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import pl.tchorzyksen.my.web.service.model.dto.UserDto;
 
@@ -8,7 +9,7 @@ public interface UserService extends UserDetailsService {
 
   UserDto createUser(UserDto userDto);
 
-  Set<UserDto> getAllUsers();
+  Page<UserDto> getAllUsers(Pageable pageable);
 
   UserDto getUserByEmail(String email);
 

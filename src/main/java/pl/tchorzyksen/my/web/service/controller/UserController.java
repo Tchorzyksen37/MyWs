@@ -1,10 +1,10 @@
 package pl.tchorzyksen.my.web.service.controller;
 
-import java.util.Set;
-import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import pl.tchorzyksen.my.web.service.model.dto.UserDto;
 import pl.tchorzyksen.my.web.service.model.request.UserRequest;
+import pl.tchorzyksen.my.web.service.model.response.UserPageableResponse;
 import pl.tchorzyksen.my.web.service.model.response.UserResponse;
 import pl.tchorzyksen.my.web.service.service.UserService;
 import pl.tchorzyksen.my.web.service.service.impl.BusinessUnitServiceImpl;
@@ -36,9 +37,11 @@ public class UserController {
   private ModelMapper modelMapper;
 
   @GetMapping
-  public ResponseEntity<Set<UserResponse>> getUsers() {
-    Set<UserResponse> userResponses = userService.getAllUsers().stream().map(this::mapToResponse).collect(Collectors.toSet());
-    return ResponseEntity.ok(userResponses);
+  public ResponseEntity<UserPageableResponse> getUsers(Pageable pageable) {
+    log.debug("Get all users pageable {}", pageable);
+    Page<UserResponse> userResponses = userService.getAllUsers(pageable).map(this::mapToResponse);
+    return ResponseEntity.ok(new UserPageableResponse(pageable.getPageNumber(), userResponses.getTotalPages(),
+        userResponses.getSize(), userResponses.toSet()));
   }
 
   @GetMapping("/{id}")

@@ -1,6 +1,7 @@
 package pl.tchorzyksen.my.web.service.model.response;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 import lombok.Data;
 import pl.tchorzyksen.my.web.service.model.Address;
 

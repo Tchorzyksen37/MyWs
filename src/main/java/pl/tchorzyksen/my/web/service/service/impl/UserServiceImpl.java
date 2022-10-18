@@ -1,27 +1,22 @@
 package pl.tchorzyksen.my.web.service.service.impl;
 
 import java.util.ArrayList;
-import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
-import pl.tchorzyksen.my.web.service.entities.BusinessUnitEntity;
 import pl.tchorzyksen.my.web.service.entities.UserEntity;
 import pl.tchorzyksen.my.web.service.exceptions.BadRequestException;
 import pl.tchorzyksen.my.web.service.exceptions.ResourceNotFoundException;
 import pl.tchorzyksen.my.web.service.model.dto.UserDto;
-import pl.tchorzyksen.my.web.service.repositories.BusinessUnitRepository;
 import pl.tchorzyksen.my.web.service.repositories.UserRepository;
 import pl.tchorzyksen.my.web.service.service.UserService;
 import pl.tchorzyksen.my.web.service.shared.Utils;
@@ -36,8 +31,6 @@ public class UserServiceImpl implements UserService {
   @Autowired
   private UserRepository userRepository;
 
-  @Autowired
-  private BusinessUnitRepository businessUnitRepository;
 
   @Autowired
   private Utils utils;
@@ -49,8 +42,8 @@ public class UserServiceImpl implements UserService {
   private ModelMapper modelMapper;
 
   @Override
-  public Set<UserDto> getAllUsers() {
-    return userRepository.findAll().stream().map(this::mapToDto).collect(Collectors.toSet());
+  public Page<UserDto> getAllUsers(Pageable pageable) {
+    return userRepository.findAll(pageable).map(this::mapToDto);
   }
 
   @Override
