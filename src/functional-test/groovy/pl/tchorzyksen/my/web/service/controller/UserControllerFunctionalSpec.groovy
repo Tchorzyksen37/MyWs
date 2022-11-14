@@ -11,11 +11,14 @@ import org.springframework.context.annotation.Import
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import pl.tchorzyksen.my.web.service.AbstractFunctionalSpec
+import pl.tchorzyksen.my.web.service.exception.ResourceNotFoundException
+import pl.tchorzyksen.my.web.service.exception.model.ExceptionResponse
 import pl.tchorzyksen.my.web.service.model.request.PersonRequest
 import pl.tchorzyksen.my.web.service.model.request.UserRequest
 import pl.tchorzyksen.my.web.service.model.response.UserPageableResponse
 import pl.tchorzyksen.my.web.service.model.response.UserResponse
 import pl.tchorzyksen.my.web.service.repositories.UserRepository
+import pl.tchorzyksen.my.web.service.service.impl.UserServiceImpl
 import spock.lang.Shared
 
 @Import(FlywayConfigUsers.class)
@@ -25,7 +28,7 @@ class UserControllerFunctionalSpec extends AbstractFunctionalSpec {
   private static final Set<UserResponse> users = new HashSet<>()
 
   @Autowired
-  private Flyway flyway;
+  private Flyway flyway
 
   @Autowired
   private UserRepository userRepository
@@ -46,7 +49,6 @@ class UserControllerFunctionalSpec extends AbstractFunctionalSpec {
   void "Should return pageable user response"() {
     when:
     ResponseEntity<UserPageableResponse> response = get("/user/?size=5&page=0", UserPageableResponse.class)
-    def userInDb = userRepository.findAll().toList()
 
     then:
     response.statusCode == HttpStatus.OK
@@ -57,7 +59,32 @@ class UserControllerFunctionalSpec extends AbstractFunctionalSpec {
 
   }
 
-  void "create user"() {
+  void "Fetch non existing user should response with 404 not found with appropriate reason"() {
+    given:
+    Integer nonExistingUserId = 720
+
+    when:
+    ResponseEntity<ExceptionResponse> response = get("/user/${nonExistingUserId}", ExceptionResponse.class)
+
+    then:
+    response.statusCode == HttpStatus.NOT_FOUND
+    response.getBody().reason() == String.format(ResourceNotFoundException.MESSAGE_FORMAT, UserServiceImpl.RESOURCE_NAME, nonExistingUserId)
+  }
+
+  void "Create user with already existing email address should response with 400 bad request with appropriate reason"() {
+    given:
+    String alreadyExistingEmailAddress = "email0@domain.com"
+    when:
+    ResponseEntity<ExceptionResponse> response = post("/user",
+        new UserRequest(email: alreadyExistingEmailAddress, password: "test123",
+            person: new PersonRequest(firstName: "John", lastName: "Doe")), ExceptionResponse.class)
+
+    then:
+    response.statusCode == HttpStatus.BAD_REQUEST
+    response.getBody().reason() == String.format(UserServiceImpl.NEW_USER_CREATION_FAILED_EMAIL_ALREADY_EXIST, alreadyExistingEmailAddress)
+  }
+
+  void "Create user happy path"() {
     when:
     ResponseEntity<UserResponse> response = post("/user",
         new UserRequest(person: new PersonRequest(firstName: "John", lastName: "Doe"),
@@ -68,10 +95,10 @@ class UserControllerFunctionalSpec extends AbstractFunctionalSpec {
   }
 
   @TestConfiguration
-  public static class FlywayConfigUsers {
+  private static class FlywayConfigUsers {
 
     @Autowired
-    private DataSource dataSource;
+    private DataSource dataSource
 
     @Bean
     Flyway flyway() {
