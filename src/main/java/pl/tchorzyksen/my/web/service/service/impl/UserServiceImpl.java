@@ -14,8 +14,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.tchorzyksen.my.web.service.entities.UserEntity;
-import pl.tchorzyksen.my.web.service.exceptions.BadRequestException;
-import pl.tchorzyksen.my.web.service.exceptions.ResourceNotFoundException;
+import pl.tchorzyksen.my.web.service.exception.BadRequestException;
+import pl.tchorzyksen.my.web.service.exception.ResourceNotFoundException;
 import pl.tchorzyksen.my.web.service.model.dto.UserDto;
 import pl.tchorzyksen.my.web.service.repositories.UserRepository;
 import pl.tchorzyksen.my.web.service.service.UserService;
@@ -26,7 +26,9 @@ import pl.tchorzyksen.my.web.service.shared.Utils;
 @Transactional
 public class UserServiceImpl implements UserService {
 
-  private static final String RESOURCE_NAME = "user";
+  public static final String RESOURCE_NAME = "user";
+
+  public static final String NEW_USER_CREATION_FAILED_EMAIL_ALREADY_EXIST = "Failed to create new user. Email <%s> address already exists.";
 
   @Autowired
   private UserRepository userRepository;
@@ -50,7 +52,7 @@ public class UserServiceImpl implements UserService {
   public UserDto createUser(UserDto userDto) {
 
     if (userRepository.findUserByEmail(userDto.getEmail()) != null) {
-      throw new BadRequestException(String.format("Failed to create new user. Email <%s> address already exists.",
+      throw new BadRequestException(String.format(NEW_USER_CREATION_FAILED_EMAIL_ALREADY_EXIST,
           userDto.getEmail()));
     }
 

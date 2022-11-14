@@ -6,7 +6,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.tchorzyksen.my.web.service.entities.BusinessUnitEntity;
-import pl.tchorzyksen.my.web.service.exceptions.ResourceNotFoundException;
+import pl.tchorzyksen.my.web.service.exception.ResourceNotFoundException;
 import pl.tchorzyksen.my.web.service.model.dto.BusinessUnitDto;
 import pl.tchorzyksen.my.web.service.repositories.BusinessUnitRepository;
 import pl.tchorzyksen.my.web.service.service.BusinessUnitService;
@@ -15,7 +15,7 @@ import pl.tchorzyksen.my.web.service.service.BusinessUnitService;
 @Service
 public class BusinessUnitServiceImpl implements BusinessUnitService {
 
-  private static final String RESOURCE_NAME = "businessUnit";
+  public static final String RESOURCE_NAME = "businessUnit";
 
   @Autowired
   private BusinessUnitRepository businessUnitRepository;
