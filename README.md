@@ -51,3 +51,8 @@ New functionalities
 - send email based on html template with dynamic variables 
 - serves gif media type
 - add flyway support (Evolutionary Database Design)
+
+
+TODO: 
+- add exemplary validation service 
+- add cache (Redis)
