@@ -1,4 +1,4 @@
-package pl.tchorzyksen.my.web.service.entities;
+package pl.tchorzyksen.my.web.service.orm;
 
 import java.io.Serial;
 import java.io.Serializable;

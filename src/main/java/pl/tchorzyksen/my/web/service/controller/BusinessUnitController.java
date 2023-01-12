@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import pl.tchorzyksen.my.web.service.entities.BusinessUnitEntity;
+import pl.tchorzyksen.my.web.service.orm.BusinessUnitEntity;
 import pl.tchorzyksen.my.web.service.model.request.BusinessUnitRequest;
 import pl.tchorzyksen.my.web.service.model.response.BusinessUnitResponse;
 import pl.tchorzyksen.my.web.service.repositories.BusinessUnitRepository;
