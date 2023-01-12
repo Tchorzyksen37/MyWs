@@ -1,4 +1,4 @@
-package pl.tchorzyksen.my.web.service.entities;
+package pl.tchorzyksen.my.web.service.orm;
 
 import java.util.Objects;
 import javax.persistence.Column;
@@ -13,21 +13,18 @@ import org.hibernate.Hibernate;
 @Setter
 @ToString(callSuper = true)
 @RequiredArgsConstructor
-@Entity(name = "persons")
-public class PersonEntity extends AbstractEntity<Long> {
+@Entity(name = "business_units")
+public class BusinessUnitEntity extends AbstractEntity<Long> {
 
-  @Column(name = "first_name", nullable = false, length = 50)
-  private String firstName;
-
-  @Column(name = "last_name", nullable = false, length = 50)
-  private String lastName;
+  @Column
+  private String name;
 
   @Override
   public boolean equals(Object o) {
     if (this == o) return true;
     if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
-    PersonEntity that = (PersonEntity) o;
-    return this.getId() != null && Objects.equals(this.getId(), that.getId());
+    BusinessUnitEntity that = (BusinessUnitEntity) o;
+    return getId() != null && Objects.equals(getId(), that.getId());
   }
 
   @Override

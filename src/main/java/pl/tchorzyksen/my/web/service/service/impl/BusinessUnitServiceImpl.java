@@ -5,7 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import pl.tchorzyksen.my.web.service.entities.BusinessUnitEntity;
+import pl.tchorzyksen.my.web.service.orm.BusinessUnitEntity;
 import pl.tchorzyksen.my.web.service.exception.ResourceNotFoundException;
 import pl.tchorzyksen.my.web.service.model.dto.BusinessUnitDto;
 import pl.tchorzyksen.my.web.service.repositories.BusinessUnitRepository;

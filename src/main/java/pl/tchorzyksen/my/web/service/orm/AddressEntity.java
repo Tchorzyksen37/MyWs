@@ -1,4 +1,4 @@
-package pl.tchorzyksen.my.web.service.entities;
+package pl.tchorzyksen.my.web.service.orm;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

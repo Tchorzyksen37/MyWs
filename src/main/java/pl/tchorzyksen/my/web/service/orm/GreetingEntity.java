@@ -1,4 +1,4 @@
-package pl.tchorzyksen.my.web.service.entities;
+package pl.tchorzyksen.my.web.service.orm;
 
 public record GreetingEntity(long id, String content) {
 

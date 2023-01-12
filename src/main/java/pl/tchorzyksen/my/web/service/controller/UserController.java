@@ -1,5 +1,6 @@
 package pl.tchorzyksen.my.web.service.controller;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,17 +25,15 @@ import pl.tchorzyksen.my.web.service.service.impl.BusinessUnitServiceImpl;
 
 @Slf4j
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/user")
 public class UserController {
 
-  @Autowired
-  private UserService userService;
+  private final UserService userService;
 
-  @Autowired
-  private BusinessUnitServiceImpl businessUnitService;
+  private final BusinessUnitServiceImpl businessUnitService;
 
-  @Autowired
-  private ModelMapper modelMapper;
+  private final ModelMapper modelMapper;
 
   @GetMapping
   public ResponseEntity<UserPageableResponse> getUsers(Pageable pageable) {

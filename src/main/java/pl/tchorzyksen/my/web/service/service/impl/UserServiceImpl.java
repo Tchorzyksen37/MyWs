@@ -13,7 +13,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import pl.tchorzyksen.my.web.service.entities.UserEntity;
+import pl.tchorzyksen.my.web.service.orm.UserEntity;
 import pl.tchorzyksen.my.web.service.exception.BadRequestException;
 import pl.tchorzyksen.my.web.service.exception.ResourceNotFoundException;
 import pl.tchorzyksen.my.web.service.model.dto.UserDto;

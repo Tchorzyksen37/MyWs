@@ -3,7 +3,7 @@ package pl.tchorzyksen.my.web.service.controller
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import pl.tchorzyksen.my.web.service.AbstractFunctionalSpec
-import pl.tchorzyksen.my.web.service.entities.GreetingEntity
+import pl.tchorzyksen.my.web.service.orm.GreetingEntity
 
 class GreetingControllerFunctionalSpec extends AbstractFunctionalSpec {
 
