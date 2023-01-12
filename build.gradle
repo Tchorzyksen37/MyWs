@@ -2,7 +2,6 @@ plugins {
   id 'org.springframework.boot' version '2.7.4'
   id 'io.spring.dependency-management' version '1.0.14.RELEASE'
   id 'org.unbroken-dome.test-sets' version '4.0.0'
-  id 'maven-publish'
   id "org.flywaydb.flyway" version "9.2.0"
 }
 
@@ -75,16 +74,4 @@ project(":email-sender-service") {
 group = 'pl.tchorzyksen'
 version = '0.1.1-SNAPSHOT'
 description = 'my-web-service'
-java.sourceCompatibility = JavaVersion.VERSION_17
-
-publishing {
-  publications {
-    maven(MavenPublication) {
-      from(components.java)
-    }
-  }
-}
-
-tasks.withType(JavaCompile) {
-  options.encoding = 'UTF-8'
-}
+java.sourceCompatibility = JavaVersion.VERSION_19
