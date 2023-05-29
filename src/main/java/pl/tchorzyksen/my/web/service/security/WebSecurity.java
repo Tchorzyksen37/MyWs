@@ -13,7 +13,7 @@ import pl.tchorzyksen.my.web.service.service.UserService;
 @EnableWebSecurity
 public class WebSecurity extends WebSecurityConfigurerAdapter {
 
-  private static final String[] ACCESSIBLE_ENDPOINTS = {"/logo/**", "/greeting/**", "/error/**", "/favicon.ico"};
+  private static final String[] ACCESSIBLE_ENDPOINTS = {"/logo/**", "/greeting/**", "/actuator/**", "/error/**", "/favicon.ico"};
 
   @Value("${app.security.tokenSecret}")
   private String tokenSecret;

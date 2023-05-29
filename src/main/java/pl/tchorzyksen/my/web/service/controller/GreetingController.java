@@ -1,26 +1,26 @@
 package pl.tchorzyksen.my.web.service.controller;
 
-import java.io.IOException;
-import java.util.concurrent.atomic.AtomicLong;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import pl.tchorzyksen.my.web.service.email.sender.service.services.EmailSenderService;
+import pl.tchorzyksen.my.web.service.email.sender.service.services.EmailSender;
 import pl.tchorzyksen.my.web.service.orm.GreetingEntity;
 
+import java.util.concurrent.atomic.AtomicLong;
+
 @RestController
+@RequiredArgsConstructor
 public class GreetingController {
 
   private static final String template = "Hello, %s!";
   private final AtomicLong counter = new AtomicLong();
 
-  @Autowired
-  private EmailSenderService emailSenderService;
+  private final EmailSender emailSenderService;
 
   @GetMapping("/greeting")
-  public ResponseEntity<GreetingEntity> greeting(@RequestParam(value = "name", defaultValue = "World") String name) throws IOException {
+  public ResponseEntity<GreetingEntity> greeting(@RequestParam(value = "name", defaultValue = "World") String name) {
     emailSenderService.sendSimpleMessage();
     return ResponseEntity.ok(new GreetingEntity(counter.incrementAndGet(), String.format(template, name)));
   }

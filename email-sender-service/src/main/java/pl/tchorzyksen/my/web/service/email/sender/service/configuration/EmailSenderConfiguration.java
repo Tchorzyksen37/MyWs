@@ -20,10 +20,8 @@ public class EmailSenderConfiguration {
     mailSender.setPort(587);
 
     mailSender.setUsername("tchorzyksen@gmail.com");
-    Optional<String> password = Optional.ofNullable(System.getProperty("smtpPassword"));
-    mailSender.setPassword(password.orElseThrow(() -> {
-      throw new NoSuchElementException("Password for SMTP does not exist.");
-    }));
+    Optional<String> password = Optional.ofNullable(System.getenv("SMTP_PASSWORD"));
+    mailSender.setPassword(password.orElseThrow(() -> new NoSuchElementException("Password for SMTP does not exist.")));
 
     Properties props = mailSender.getJavaMailProperties();
     props.put("mail.transport.protocol", "smtp");
