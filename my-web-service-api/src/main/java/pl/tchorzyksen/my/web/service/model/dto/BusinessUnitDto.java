@@ -1,6 +1,8 @@
 package pl.tchorzyksen.my.web.service.model.dto;
 
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
+
 import lombok.Data;
 
 @Data
@@ -10,9 +12,9 @@ public class BusinessUnitDto {
 
   private Long version;
 
-  private LocalDateTime createdDateTime;
+  private ZonedDateTime createdDateTime;
 
-  private LocalDateTime lastModifiedDateTime;
+  private ZonedDateTime lastModifiedDateTime;
 
   private String name;
 

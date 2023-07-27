@@ -6,37 +6,41 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureException;
 import io.jsonwebtoken.UnsupportedJwtException;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Optional;
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Optional;
+
+import static pl.tchorzyksen.my.web.service.security.SecurityConstants.HEADER_STRING;
+import static pl.tchorzyksen.my.web.service.security.SecurityConstants.TOKEN_PREFIX;
+
 @Slf4j
 public class AuthorizationFilter extends BasicAuthenticationFilter {
 
-  private final String tokenSecret;
+  private final SecurityConfiguration securityConfiguration;
 
-  public AuthorizationFilter(AuthenticationManager authenticationManager, String tokenSecret) {
+  public AuthorizationFilter(AuthenticationManager authenticationManager, SecurityConfiguration securityConfiguration) {
     super(authenticationManager);
-    this.tokenSecret = tokenSecret;
+    this.securityConfiguration = securityConfiguration;
   }
 
   @Override
   protected void doFilterInternal(
-      HttpServletRequest request, HttpServletResponse response, FilterChain chain)
-      throws IOException, ServletException {
+          HttpServletRequest request, HttpServletResponse response, FilterChain chain)
+          throws IOException, ServletException {
 
-    String header = request.getHeader(SecurityConstants.HEADER_STRING);
+    String header = request.getHeader(HEADER_STRING);
 
-    if (header != null && header.startsWith(SecurityConstants.TOKEN_PREFIX)) {
+    if (header != null && header.startsWith(TOKEN_PREFIX)) {
 
       UsernamePasswordAuthenticationToken authenticationToken = getAuthentication(request);
       SecurityContextHolder.getContext().setAuthentication(authenticationToken);
@@ -47,11 +51,11 @@ public class AuthorizationFilter extends BasicAuthenticationFilter {
 
   private UsernamePasswordAuthenticationToken getAuthentication(HttpServletRequest request) {
 
-    String token = request.getHeader(SecurityConstants.HEADER_STRING);
+    String token = request.getHeader(HEADER_STRING);
 
     if (token != null) {
       log.debug("JWT token: {}", token);
-      token = token.replace(SecurityConstants.TOKEN_PREFIX, "");
+      token = token.replace(TOKEN_PREFIX, "");
 
       Optional<String> user = getJwtClaims(token).map(Claims::getSubject);
 
@@ -68,9 +72,9 @@ public class AuthorizationFilter extends BasicAuthenticationFilter {
   private Optional<Claims> getJwtClaims(String token) {
     try {
       return Optional.of(Jwts.parser()
-          .setSigningKey(tokenSecret)
-          .parseClaimsJws(token)
-          .getBody());
+              .setSigningKey(securityConfiguration.getTokenSecret())
+              .parseClaimsJws(token)
+              .getBody());
     } catch (ExpiredJwtException | UnsupportedJwtException | MalformedJwtException | SignatureException |
              IllegalArgumentException e) {
       log.debug("Authorization failed with message {}", e.getMessage());

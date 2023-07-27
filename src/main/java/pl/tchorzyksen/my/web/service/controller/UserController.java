@@ -3,7 +3,6 @@ package pl.tchorzyksen.my.web.service.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -40,7 +39,7 @@ public class UserController {
     log.debug("Get all users pageable {}", pageable);
     Page<UserResponse> userResponses = userService.getAllUsers(pageable).map(this::mapToResponse);
     return ResponseEntity.ok(new UserPageableResponse(pageable.getPageNumber(), userResponses.getTotalPages(),
-        userResponses.getSize(), userResponses.toSet()));
+            userResponses.getSize(), userResponses.toSet()));
   }
 
   @GetMapping("/{id}")

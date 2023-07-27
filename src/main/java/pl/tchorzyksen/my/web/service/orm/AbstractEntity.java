@@ -1,18 +1,19 @@
 package pl.tchorzyksen.my.web.service.orm;
 
-import java.io.Serializable;
-import java.time.LocalDateTime;
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.MappedSuperclass;
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
-import javax.persistence.Version;
+import jakarta.persistence.Column;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.MappedSuperclass;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
+import jakarta.persistence.Version;
 import lombok.Getter;
 import lombok.ToString;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
+
+import java.io.Serializable;
+import java.time.ZonedDateTime;
 
 import static java.time.LocalDateTime.now;
 
@@ -31,21 +32,21 @@ abstract class AbstractEntity<T extends Serializable> {
 
   @CreatedDate
   @Column(name = "created_date_time")
-  private LocalDateTime createdDateTime;
+  private ZonedDateTime createdDateTime;
 
   @LastModifiedDate
   @Column(name = "last_modified_date_time")
-  private LocalDateTime lastModifiedDateTime;
+  private ZonedDateTime lastModifiedDateTime;
 
   @PrePersist
   public void prePersist() {
-    createdDateTime = now();
-    lastModifiedDateTime = now();
+    createdDateTime = ZonedDateTime.now();
+    lastModifiedDateTime = ZonedDateTime.now();
   }
 
   @PreUpdate
   public void preUpdate() {
-    lastModifiedDateTime = now();
+    lastModifiedDateTime = ZonedDateTime.now();
   }
 
 }
