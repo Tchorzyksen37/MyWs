@@ -39,6 +39,7 @@ class UserControllerFunctionalSpec extends AbstractFunctionalSpec {
   }
 
   def setupSpec() {
+    // TODO: Set up const data time for tests
     users.add(new UserResponse(id: 0, version: 0, createdDateTime: LocalDateTime.parse("2022-10-14T17:59:57.165952"),
         lastModifiedDateTime: LocalDateTime.parse("2022-10-14T17:59:57.165952"), userId: "userId0", email: "email0@domain.com"))
 
