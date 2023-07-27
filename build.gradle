@@ -1,8 +1,8 @@
 plugins {
-  id 'org.springframework.boot' version '2.7.4'
+  id 'org.springframework.boot' version '3.1.2'
   id 'io.spring.dependency-management' version '1.0.14.RELEASE'
-  id 'org.unbroken-dome.test-sets' version '4.0.0'
-  id "org.flywaydb.flyway" version "9.2.0"
+//  id 'org.unbroken-dome.test-sets' version '4.0.0'
+  id 'org.flywaydb.flyway' version '9.21.0'
 }
 
 allprojects {
@@ -22,53 +22,60 @@ allprojects {
 
   dependencies {
     compileOnly 'org.projectlombok:lombok:1.18.24'
-    annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
+    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
     annotationProcessor 'org.projectlombok:lombok:1.18.24'
 
     testCompileOnly 'org.projectlombok:lombok:1.18.24'
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.24'
 
-    testImplementation(group: 'org.codehaus.groovy', name: 'groovy-all', version: '3.0.9')
-    testImplementation(group: 'org.spockframework', name: 'spock-core', version: '2.0-groovy-3.0')
-    testImplementation(group: 'org.spockframework', name: 'spock-spring', version: '2.1-M2-groovy-3.0')
+    testImplementation 'org.apache.groovy:groovy-all:4.0.13'
+    testImplementation 'org.spockframework:spock-core:2.4-M1-groovy-4.0'
+    testImplementation 'org.spockframework:spock-spring:2.4-M1-groovy-4.0'
+  }
+}
+
+//apply from: '${rootDir}/gradle/test.gradle'
+apply from: "${rootDir}/gradle/database.gradle"
+
+dependencies {
+  implementation project(':my-web-service-api')
+  implementation project(':email-sender-service')
+  implementation 'ch.qos.logback:logback-core:1.4.8'
+
+  implementation 'org.springframework.boot:spring-boot-starter-web'
+  implementation 'org.springframework.boot:spring-boot-starter-security'
+  implementation 'org.springframework.boot:spring-boot-starter-actuator'
+
+  implementation(group: 'io.jsonwebtoken', name: 'jjwt', version: '0.6.0')
+
+  implementation(group: 'org.modelmapper', name: 'modelmapper', version: '3.1.1')
+  implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.15.2'
+
+  implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+
+  testImplementation 'org.springframework.boot:spring-boot-starter-test'
+  testImplementation 'org.testcontainers:spock:1.18.3'
+  testImplementation 'org.testcontainers:postgresql:1.18.3'
+
+}
+
+project(':email-sender-service') {
+
+  bootJar {
+    enabled = false
+  }
+
+  dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-mail'
+    implementation 'org.freemarker:freemarker:2.3.31'
 
   }
 }
 
-apply from: "${rootDir}/gradle/test.gradle"
-apply from: "${rootDir}/gradle/database.gradle"
-
-dependencies {
-  implementation project(":my-web-service-api")
-  implementation project(":email-sender-service")
-  implementation(group: 'ch.qos.logback', name: 'logback-core', version: '1.2.10')
-
-  implementation(group: 'org.springframework.boot', name: 'spring-boot-starter-web')
-  implementation(group: 'org.springframework.boot', name: 'spring-boot-starter-security')
-  implementation(group: 'org.springframework.boot', name: 'spring-boot-starter-actuator')
-
-  implementation(group: 'io.jsonwebtoken', name: 'jjwt', version: '0.6.0')
-
-  implementation(group: 'org.modelmapper', name: 'modelmapper', version: '3.0.0')
-  implementation(group: 'javax.xml.bind', name: 'jaxb-api', version: '2.3.1')
-  implementation(group: 'org.codehaus.jackson', name: 'jackson-mapper-asl', version: '1.9.13')
-
-  implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
-
-  testImplementation(group: 'org.springframework.boot', name: 'spring-boot-starter-test')
-
-  testImplementation(group: 'org.testcontainers', name: 'postgresql', version: '1.17.3')
-  testImplementation "org.testcontainers:spock:1.17.3"
-
-
-}
-
-project(":email-sender-service") {
-  dependencies {
-    implementation(group: 'org.springframework.boot', name: 'spring-boot-starter-web')
-    implementation(group: 'org.springframework.boot', name: 'spring-boot-starter-mail')
-    implementation(group: 'org.freemarker', name: 'freemarker', version: '2.3.31')
-
+project(':my-web-service-api') {
+  bootJar {
+    enabled = false
   }
 }
 

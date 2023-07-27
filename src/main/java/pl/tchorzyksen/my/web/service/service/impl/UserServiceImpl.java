@@ -1,6 +1,5 @@
 package pl.tchorzyksen.my.web.service.service.impl;
 
-import java.util.ArrayList;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -10,16 +9,18 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import pl.tchorzyksen.my.web.service.orm.UserEntity;
 import pl.tchorzyksen.my.web.service.exception.BadRequestException;
 import pl.tchorzyksen.my.web.service.exception.ResourceNotFoundException;
 import pl.tchorzyksen.my.web.service.model.dto.UserDto;
+import pl.tchorzyksen.my.web.service.orm.UserEntity;
 import pl.tchorzyksen.my.web.service.repositories.UserRepository;
 import pl.tchorzyksen.my.web.service.service.UserService;
 import pl.tchorzyksen.my.web.service.shared.Utils;
+
+import java.util.ArrayList;
 
 @Slf4j
 @Service
@@ -38,7 +39,7 @@ public class UserServiceImpl implements UserService {
   private Utils utils;
 
   @Autowired
-  private BCryptPasswordEncoder bCryptPasswordEncoder;
+  private PasswordEncoder passwordEncoder;
 
   @Autowired
   private ModelMapper modelMapper;
@@ -53,12 +54,12 @@ public class UserServiceImpl implements UserService {
 
     if (userRepository.findUserByEmail(userDto.getEmail()) != null) {
       throw new BadRequestException(String.format(NEW_USER_CREATION_FAILED_EMAIL_ALREADY_EXIST,
-          userDto.getEmail()));
+              userDto.getEmail()));
     }
 
     UserEntity userEntity = mapToEntity(userDto);
     userEntity.setUserId(utils.generateUserId(30));
-    userEntity.setEncryptedPassword(bCryptPasswordEncoder.encode(userDto.getPassword()));
+    userEntity.setEncryptedPassword(passwordEncoder.encode(userDto.getPassword()));
 
     log.debug("Save UserEntity: {} to database", userEntity);
 
@@ -108,7 +109,7 @@ public class UserServiceImpl implements UserService {
 
   private UserEntity getUserEntity(Long id) {
     UserEntity userEntity = userRepository.findById(id)
-        .orElseThrow(() -> new ResourceNotFoundException(RESOURCE_NAME, id));
+            .orElseThrow(() -> new ResourceNotFoundException(RESOURCE_NAME, id));
     log.debug("UserEntity found {}", userEntity);
     return userEntity;
   }

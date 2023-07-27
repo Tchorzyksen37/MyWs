@@ -8,6 +8,10 @@ public class SecurityConstants {
 
   public static final String HEADER_STRING = "Authorization";
 
+  public static final String HEADER_USER_ID = "UserId";
+
   public static final String SIGN_UP_URL = "/user";
+
+  public static final String LOGIN_URL = "/user/login";
 
 }

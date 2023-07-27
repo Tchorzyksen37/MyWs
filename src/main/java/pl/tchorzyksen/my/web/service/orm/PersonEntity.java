@@ -1,13 +1,14 @@
 package pl.tchorzyksen.my.web.service.orm;
 
-import java.util.Objects;
-import javax.persistence.Column;
-import javax.persistence.Entity;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.Hibernate;
+
+import java.util.Objects;
 
 @Getter
 @Setter

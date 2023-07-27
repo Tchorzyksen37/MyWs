@@ -1,60 +1,65 @@
 package pl.tchorzyksen.my.web.service.security;
 
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpMethod;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.web.SecurityFilterChain;
 import pl.tchorzyksen.my.web.service.service.UserService;
 
+import static org.springframework.http.HttpMethod.POST;
+import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
+import static pl.tchorzyksen.my.web.service.security.SecurityConstants.LOGIN_URL;
+import static pl.tchorzyksen.my.web.service.security.SecurityConstants.SIGN_UP_URL;
+
+@Configuration
 @EnableWebSecurity
-public class WebSecurity extends WebSecurityConfigurerAdapter {
+@RequiredArgsConstructor
+public class WebSecurity {
 
   private static final String[] ACCESSIBLE_ENDPOINTS = {"/logo/**", "/greeting/**", "/actuator/**", "/error/**", "/favicon.ico"};
 
-  @Value("${app.security.tokenSecret}")
-  private String tokenSecret;
   private final UserService userService;
 
-  private final BCryptPasswordEncoder bCryptPasswordEncoder;
+  private final SecurityConfiguration securityConfiguration;
 
-  public WebSecurity(UserService userService, BCryptPasswordEncoder bCryptPasswordEncoder) {
-    this.userService = userService;
-    this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+  private final ObjectMapper objectMapper;
+
+  @Bean
+  protected AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+    return authenticationConfiguration.getAuthenticationManager();
   }
 
-  @Override
-  protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-    auth.userDetailsService(userService).passwordEncoder(bCryptPasswordEncoder);
+  @Bean
+  public SecurityFilterChain filterChain(HttpSecurity httpSecurity, AuthenticationManager authenticationManager) throws Exception {
+
+    httpSecurity.authorizeHttpRequests(authorizeHttpRequestsConfigurer -> authorizeHttpRequestsConfigurer
+                    .requestMatchers(ACCESSIBLE_ENDPOINTS).permitAll()
+                    .requestMatchers(POST, SIGN_UP_URL).permitAll()
+                    .anyRequest().fullyAuthenticated())
+            .csrf(AbstractHttpConfigurer::disable)
+            .addFilter(authenticationFilter(authenticationManager))
+            .addFilter(authorizationFilter(authenticationManager))
+            .sessionManagement(sessionManagementConfigurer -> sessionManagementConfigurer
+                    .sessionCreationPolicy(STATELESS));
+
+    return httpSecurity.build();
   }
 
-  @Override
-  protected void configure(HttpSecurity http) throws Exception {
-
-    http.authorizeRequests(
-            authorizeRequests ->
-                authorizeRequests
-                    .antMatchers(HttpMethod.POST, SecurityConstants.SIGN_UP_URL)
-                    .permitAll()
-                    .antMatchers(ACCESSIBLE_ENDPOINTS)
-                    .permitAll()
-                    .anyRequest()
-                    .fullyAuthenticated())
-        .csrf()
-        .disable()
-        .addFilter(getAuthenticationFilter())
-        .addFilter(new AuthorizationFilter(authenticationManager(), tokenSecret))
-        .sessionManagement()
-        .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+  private AuthenticationFilter authenticationFilter(AuthenticationManager authenticationManager) {
+    var authFilter = new AuthenticationFilter(userService, securityConfiguration, objectMapper);
+    authFilter.setFilterProcessesUrl(LOGIN_URL);
+    authFilter.setAuthenticationManager(authenticationManager);
+    return authFilter;
   }
 
-  public AuthenticationFilter getAuthenticationFilter() throws Exception {
-
-    final AuthenticationFilter filter = new AuthenticationFilter(authenticationManager(), tokenSecret);
-    filter.setFilterProcessesUrl("/user/login");
-    return filter;
+  private AuthorizationFilter authorizationFilter(AuthenticationManager authenticationManager) {
+    return new AuthorizationFilter(authenticationManager, securityConfiguration);
   }
+
 }

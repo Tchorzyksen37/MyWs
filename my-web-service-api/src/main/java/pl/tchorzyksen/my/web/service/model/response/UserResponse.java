@@ -1,6 +1,7 @@
 package pl.tchorzyksen.my.web.service.model.response;
 
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.Objects;
 import lombok.Data;
 import pl.tchorzyksen.my.web.service.model.Address;
@@ -12,9 +13,9 @@ public class UserResponse {
 
   private Long version;
 
-  private LocalDateTime createdDateTime;
+  private ZonedDateTime createdDateTime;
 
-  private LocalDateTime lastModifiedDateTime;
+  private ZonedDateTime lastModifiedDateTime;
 
   private String userId;
 

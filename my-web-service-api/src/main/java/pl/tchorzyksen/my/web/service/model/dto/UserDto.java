@@ -3,6 +3,8 @@ package pl.tchorzyksen.my.web.service.model.dto;
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
+
 import lombok.Data;
 import pl.tchorzyksen.my.web.service.model.Address;
 
@@ -16,9 +18,9 @@ public class UserDto implements Serializable {
 
   private Long version;
 
-  private LocalDateTime createdDateTime;
+  private ZonedDateTime createdDateTime;
 
-  private LocalDateTime lastModifiedDateTime;
+  private ZonedDateTime lastModifiedDateTime;
 
   private String userId;
 
