@@ -1,4 +1,4 @@
-package pl.tchorzyksen.my.web.service
+package pl.tchorzyksen.my.service.backend
 
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.SignatureAlgorithm
@@ -15,17 +15,16 @@ import org.springframework.util.MultiValueMap
 import org.springframework.web.util.UriComponentsBuilder
 import org.testcontainers.containers.PostgreSQLContainer
 import org.testcontainers.spock.Testcontainers
-import pl.tchorzyksen.my.web.service.security.SecurityConstants
 import spock.lang.Shared
 import spock.lang.Specification
 
 @Testcontainers
 @ActiveProfiles("functional-test")
-@SpringBootTest(classes = FunctionalTestConfiguration.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-abstract class AbstractFunctionalSpec extends Specification {
+@SpringBootTest(classes = IntegrationTestConfiguration.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+abstract class AbstractIntegrationSpec extends Specification {
 
   @Autowired
-  protected FunctionalTestConfiguration functionalTestConfiguration
+  protected IntegrationTestConfiguration functionalTestConfiguration
 
   @Autowired
   protected ModelMapper modelMapper
@@ -52,10 +51,10 @@ abstract class AbstractFunctionalSpec extends Specification {
 
   private String getToken() {
     return Jwts.builder()
-        .setSubject("admin")
-        .setExpiration(new Date(System.currentTimeMillis() + SecurityConstants.EXPIRATION_TIME))
-        .signWith(SignatureAlgorithm.HS512, functionalTestConfiguration.getTestTokenSecret())
-        .compact()
+            .setSubject("admin")
+            .setExpiration(new Date(System.currentTimeMillis() + SecurityConstants.EXPIRATION_TIME))
+            .signWith(SignatureAlgorithm.HS512, functionalTestConfiguration.getTestTokenSecret())
+            .compact()
   }
 
 }

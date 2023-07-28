@@ -22,7 +22,7 @@ class UserControllerSpec extends Specification {
 
   BusinessUnitService businessUnitService = Mock(BusinessUnitServiceImpl.class)
 
-  UserController userController = new UserController(userService: userService, businessUnitService: businessUnitService, modelMapper: modelMapper)
+  UserController userController = new UserController(userService, businessUnitService, modelMapper)
 
   def "Request is correctly mapped and passed to service"() {
     given: "User request model"
