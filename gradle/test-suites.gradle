@@ -1,0 +1,35 @@
+sourceSets {
+  integrationTest {
+    compileClasspath += sourceSets.main.output
+    runtimeClasspath += sourceSets.main.output
+  }
+}
+
+configurations {
+  integrationTestImplementation.extendsFrom testImplementation
+  integrationTestImplementation.extendsFrom testRuntime
+  integrationTestImplementation.extendsFrom testCompileOnly
+  integrationTestImplementation.extendsFrom testAnnotationProcessor
+}
+
+tasks.withType(Test).configureEach {
+  useJUnitPlatform()
+  systemProperty 'spock.logEnabled', 'true'
+  systemProperty 'spock.logFileDir', './build/test-results/test'
+  systemProperty 'spock.logFileName', 'spock-report'
+}
+
+tasks.register('integrationTest', Test) {
+  group = 'verification'
+
+  testClassesDirs = sourceSets.integrationTest.output.classesDirs
+  classpath = sourceSets.integrationTest.runtimeClasspath
+  shouldRunAfter(test)
+
+//  filter {
+//    include '**/**IntegrationTest.class'
+//    include '**/**IntegrationSpec.class'
+//  }
+}
+
+check.dependsOn(integrationTest)
