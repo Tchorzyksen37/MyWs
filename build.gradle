@@ -34,11 +34,11 @@ allprojects {
   }
 }
 
-//apply from: '${rootDir}/gradle/test.gradle'
+//apply from: "${rootDir}/gradle/test.gradle"
 apply from: "${rootDir}/gradle/database.gradle"
 
 dependencies {
-  implementation project(':my-web-service-api')
+  implementation project(':my-service-backend-api')
   implementation project(':email-sender-service')
   implementation 'ch.qos.logback:logback-core:1.4.8'
 
@@ -73,7 +73,7 @@ project(':email-sender-service') {
   }
 }
 
-project(':my-web-service-api') {
+project(':my-service-backend-api') {
   bootJar {
     enabled = false
   }
@@ -81,5 +81,5 @@ project(':my-web-service-api') {
 
 group = 'pl.tchorzyksen'
 version = '0.1.1-SNAPSHOT'
-description = 'my-web-service'
+description = 'my-service-backend'
 java.sourceCompatibility = JavaVersion.VERSION_19
