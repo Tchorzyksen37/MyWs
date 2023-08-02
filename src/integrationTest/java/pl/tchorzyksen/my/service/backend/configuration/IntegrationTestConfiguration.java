@@ -1,4 +1,4 @@
-package pl.tchorzyksen.my.service.backend;
+package pl.tchorzyksen.my.service.backend.configuration;
 
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
@@ -19,4 +19,5 @@ public class IntegrationTestConfiguration {
   EmailSender fakeEmailSenderService() {
     return () -> System.out.println("Send email is not tested automatically.");
   }
+
 }

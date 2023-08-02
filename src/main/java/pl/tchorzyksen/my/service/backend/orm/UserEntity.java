@@ -54,17 +54,4 @@ public class UserEntity extends AbstractEntity<Long> implements Serializable {
   @Column(name = "is_active", nullable = false)
   private Boolean isActive = false;
 
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
-    UserEntity that = (UserEntity) o;
-    return this.getId() != null && Objects.equals(this.getId(), that.getId());
-  }
-
-  @Override
-  public int hashCode() {
-    return getClass().hashCode();
-  }
-
 }

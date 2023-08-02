@@ -10,21 +10,27 @@ import org.springframework.http.HttpEntity
 import org.springframework.http.HttpMethod
 import org.springframework.http.ResponseEntity
 import org.springframework.test.context.ActiveProfiles
+import org.springframework.test.context.DynamicPropertyRegistry
+import org.springframework.test.context.DynamicPropertySource
 import org.springframework.util.LinkedMultiValueMap
 import org.springframework.util.MultiValueMap
 import org.springframework.web.util.UriComponentsBuilder
 import org.testcontainers.containers.PostgreSQLContainer
 import org.testcontainers.spock.Testcontainers
-import spock.lang.Shared
+import org.testcontainers.utility.DockerImageName
+import pl.tchorzyksen.my.service.backend.configuration.IntegrationTestConfiguration
+import pl.tchorzyksen.my.service.backend.configuration.TestClockConfiguration
+import pl.tchorzyksen.my.service.backend.security.SecurityConstants
 import spock.lang.Specification
 
 @Testcontainers
-@ActiveProfiles("functional-test")
-@SpringBootTest(classes = IntegrationTestConfiguration.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@ActiveProfiles("integration-test")
+@SpringBootTest(classes = [IntegrationTestConfiguration.class, TestClockConfiguration.class],
+        webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 abstract class AbstractIntegrationSpec extends Specification {
 
   @Autowired
-  protected IntegrationTestConfiguration functionalTestConfiguration
+  protected IntegrationTestConfiguration integrationTestConfiguration
 
   @Autowired
   protected ModelMapper modelMapper
@@ -32,8 +38,16 @@ abstract class AbstractIntegrationSpec extends Specification {
   @Autowired
   private TestRestTemplate testRestTemplate
 
-  @Shared
-  public PostgreSQLContainer postgreSQLContainer = new PostgreSQLContainer("postgres:latest")
+  static PostgreSQLContainer postgreSQLContainer = new PostgreSQLContainer(DockerImageName.parse("postgres:15.3"))
+
+  static {
+    postgreSQLContainer.start()
+  }
+
+  @DynamicPropertySource
+  static void properties(DynamicPropertyRegistry registry) {
+    registry.add("spring.datasource.url", postgreSQLContainer::getJdbcUrl)
+  }
 
   protected <T, R> ResponseEntity<T> post(String uri, R request, Class<T> responseClass) {
     String stringUri = UriComponentsBuilder.fromUriString(uri).build().toUriString()
@@ -53,7 +67,7 @@ abstract class AbstractIntegrationSpec extends Specification {
     return Jwts.builder()
             .setSubject("admin")
             .setExpiration(new Date(System.currentTimeMillis() + SecurityConstants.EXPIRATION_TIME))
-            .signWith(SignatureAlgorithm.HS512, functionalTestConfiguration.getTestTokenSecret())
+            .signWith(SignatureAlgorithm.HS512, integrationTestConfiguration.getTestTokenSecret())
             .compact()
   }
 
