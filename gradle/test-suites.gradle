@@ -1,35 +1,40 @@
-sourceSets {
-  integrationTest {
-    compileClasspath += sourceSets.main.output
-    runtimeClasspath += sourceSets.main.output
+testing {
+  suites {
+    test {
+      useSpock('2.4-M1-groovy-4.0')
+    }
+
+    integrationTest(JvmTestSuite) {
+      configurations.integrationTestImplementation {
+        extendsFrom(configurations.implementation)
+      }
+
+      dependencies {
+        implementation project()
+        implementation 'org.springframework.boot:spring-boot-starter-test'
+        implementation 'org.spockframework:spock-spring:2.4-M1-groovy-4.0'
+        implementation 'org.testcontainers:spock:1.18.3'
+        implementation 'org.testcontainers:postgresql:1.18.3'
+        // Used for token something... base64
+        implementation 'javax.xml.bind:jaxb-api:2.3.1'
+
+        compileOnly 'org.projectlombok:lombok:1.18.24'
+        annotationProcessor 'org.projectlombok:lombok:1.18.24'
+      }
+
+      targets {
+        all {
+          testTask.configure {
+            shouldRunAfter(test)
+          }
+        }
+      }
+
+    }
+
   }
 }
 
-configurations {
-  integrationTestImplementation.extendsFrom testImplementation
-  integrationTestImplementation.extendsFrom testRuntime
-  integrationTestImplementation.extendsFrom testCompileOnly
-  integrationTestImplementation.extendsFrom testAnnotationProcessor
+tasks.named('check') {
+  dependsOn(testing.suites.integrationTest)
 }
-
-tasks.withType(Test).configureEach {
-  useJUnitPlatform()
-  systemProperty 'spock.logEnabled', 'true'
-  systemProperty 'spock.logFileDir', './build/test-results/test'
-  systemProperty 'spock.logFileName', 'spock-report'
-}
-
-tasks.register('integrationTest', Test) {
-  group = 'verification'
-
-  testClassesDirs = sourceSets.integrationTest.output.classesDirs
-  classpath = sourceSets.integrationTest.runtimeClasspath
-  shouldRunAfter(test)
-
-//  filter {
-//    include '**/**IntegrationTest.class'
-//    include '**/**IntegrationSpec.class'
-//  }
-}
-
-check.dependsOn(integrationTest)
