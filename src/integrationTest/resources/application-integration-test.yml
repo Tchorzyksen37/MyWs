@@ -10,7 +10,7 @@ spring:
   datasource:
     username: test
     password: test
-    url: "jdbc:tc:postgresql:///test"
+
   jpa:
     database-platform: "org.hibernate.dialect.PostgreSQLDialect"
     show-sql: true

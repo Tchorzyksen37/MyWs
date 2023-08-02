@@ -9,22 +9,24 @@ import org.springframework.context.annotation.Import
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import pl.tchorzyksen.my.service.backend.AbstractIntegrationSpec
+import pl.tchorzyksen.my.service.backend.exception.ResourceNotFoundException
 import pl.tchorzyksen.my.service.backend.exception.model.ExceptionResponse
 import pl.tchorzyksen.my.service.backend.model.request.PersonRequest
 import pl.tchorzyksen.my.service.backend.model.request.UserRequest
 import pl.tchorzyksen.my.service.backend.model.response.UserPageableResponse
 import pl.tchorzyksen.my.service.backend.model.response.UserResponse
 import pl.tchorzyksen.my.service.backend.repositories.UserRepository
-import spock.lang.Shared
+import pl.tchorzyksen.my.service.backend.service.impl.UserServiceImpl
 
 import javax.sql.DataSource
+import java.time.Clock
 import java.time.LocalDateTime
 
 @Import(FlywayConfigUsers.class)
 class UserControllerIntegrationSpec extends AbstractIntegrationSpec {
 
-  @Shared
-  private static final Set<UserResponse> users = new HashSet<>()
+  @Autowired
+  private Clock testClock
 
   @Autowired
   private Flyway flyway
@@ -37,25 +39,23 @@ class UserControllerIntegrationSpec extends AbstractIntegrationSpec {
     flyway.migrate()
   }
 
-  def setupSpec() {
-    // TODO: Set up const data time for tests
-    users.add(new UserResponse(id: 0, version: 0, createdDateTime: LocalDateTime.parse("2022-10-14T17:59:57.165952"),
-            lastModifiedDateTime: LocalDateTime.parse("2022-10-14T17:59:57.165952"), userId: "userId0", email: "email0@domain.com"))
-
-    users.add(new UserResponse(id: 1, version: 0, createdDateTime: LocalDateTime.parse("2022-10-14T17:59:57.165952"),
-            lastModifiedDateTime: LocalDateTime.parse("2022-10-14T17:59:57.165952"), userId: "userId1", email: "email1@domain.com"))
-  }
-
   void "Should return pageable user response"() {
+    given:
+    def userResponse = Set.of(
+            new UserResponse(id: 10, version: 0, createdDateTime: LocalDateTime.now(testClock),
+                    lastModifiedDateTime: LocalDateTime.now(testClock), userId: "userId0", email: "email0@domain.com"),
+            new UserResponse(id: 11, version: 0, createdDateTime: LocalDateTime.now(testClock),
+                    lastModifiedDateTime: LocalDateTime.now(testClock), userId: "userId1", email: "email1@domain.com"))
+
     when:
-    ResponseEntity<UserPageableResponse> response = get("/user/?size=5&page=0", UserPageableResponse.class)
+    def response = get("/user?size=5&page=0", UserPageableResponse.class)
 
     then:
     response.statusCode == HttpStatus.OK
     response.getBody().page == 0
     response.getBody().size == 5
     response.getBody().totalPages == 1
-    response.getBody().result.containsAll(users)
+    response.getBody().result.containsAll(userResponse)
 
   }
 
@@ -104,6 +104,7 @@ class UserControllerIntegrationSpec extends AbstractIntegrationSpec {
     @Bean
     Flyway flyway() {
       var configuration = new FluentConfiguration()
+              .cleanDisabled(false)
               .dataSource(dataSource)
               .locations("db/migration", "test-data/users")
 

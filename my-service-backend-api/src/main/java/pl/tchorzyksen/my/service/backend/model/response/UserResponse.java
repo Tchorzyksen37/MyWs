@@ -1,5 +1,7 @@
 package pl.tchorzyksen.my.service.backend.model.response;
 
+import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.time.ZonedDateTime;
 
 import lombok.Data;
@@ -12,9 +14,9 @@ public class UserResponse {
 
   private Long version;
 
-  private ZonedDateTime createdDateTime;
+  private LocalDateTime createdDateTime;
 
-  private ZonedDateTime lastModifiedDateTime;
+  private LocalDateTime lastModifiedDateTime;
 
   private String userId;
 
