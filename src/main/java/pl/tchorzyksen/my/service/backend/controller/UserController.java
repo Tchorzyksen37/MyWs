@@ -20,7 +20,6 @@ import pl.tchorzyksen.my.service.backend.model.request.UserRequest;
 import pl.tchorzyksen.my.service.backend.model.response.UserPageableResponse;
 import pl.tchorzyksen.my.service.backend.model.response.UserResponse;
 import pl.tchorzyksen.my.service.backend.service.UserService;
-import pl.tchorzyksen.my.service.backend.service.impl.BusinessUnitServiceImpl;
 
 @Slf4j
 @RestController
@@ -29,8 +28,6 @@ import pl.tchorzyksen.my.service.backend.service.impl.BusinessUnitServiceImpl;
 public class UserController {
 
   private final UserService userService;
-
-  private final BusinessUnitServiceImpl businessUnitService;
 
   private final ModelMapper modelMapper;
 
@@ -57,8 +54,6 @@ public class UserController {
     log.debug("Create user request {}", userRequest);
 
     UserDto userDto = mapToDto(userRequest);
-    setBusinessUnitOnDto(userDto, userRequest.getBusinessUnitId());
-
     UserResponse userResponse = mapToResponse(userService.createUser(userDto));
 
     return new ResponseEntity<>(userResponse, HttpStatus.CREATED);
@@ -70,10 +65,8 @@ public class UserController {
 
     log.debug("Update user with id: {} request {}", id, userRequest);
     UserDto userDto = mapToDto(userRequest);
-    setBusinessUnitOnDto(userDto, userRequest.getBusinessUnitId());
 
     UserDto updatedUserDto = userService.updateUser(id, userDto);
-
     UserResponse userResponse = mapToResponse(updatedUserDto);
 
     return ResponseEntity.ok(userResponse);
@@ -92,13 +85,6 @@ public class UserController {
   private UserResponse mapToResponse(UserDto userDto) {
     log.debug("Map UserDto {} to UserResponse", userDto);
     return modelMapper.map(userDto, UserResponse.class);
-  }
-
-  private void setBusinessUnitOnDto(UserDto userDto, Long businessUnitId) {
-
-    if (businessUnitId != null) {
-      userDto.setBusinessUnit(businessUnitService.getBusinessUnitById(businessUnitId));
-    }
   }
 
 }

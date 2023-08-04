@@ -26,12 +26,6 @@ ALTER TABLE users
 ALTER TABLE users
     ADD CONSTRAINT FK_USERS_ON_ADDRESS FOREIGN KEY (address_id) REFERENCES addresses (id);
 
-ALTER TABLE business_units
-    ADD COLUMN created_date_time TIMESTAMP WITHOUT TIME ZONE;
-
-ALTER TABLE business_units
-    ADD COLUMN last_modified_date_time TIMESTAMP WITHOUT TIME ZONE;
-
 ALTER TABLE persons
     ADD COLUMN created_date_time TIMESTAMP WITHOUT TIME ZONE;
 

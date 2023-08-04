@@ -1,13 +1,11 @@
 package pl.tchorzyksen.my.service.backend.model.dto;
 
+import lombok.Data;
+import pl.tchorzyksen.my.service.backend.model.Address;
+
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.time.OffsetDateTime;
-import java.time.ZonedDateTime;
-
-import lombok.Data;
-import pl.tchorzyksen.my.service.backend.model.Address;
 
 @Data
 public class UserDto implements Serializable {
@@ -28,8 +26,6 @@ public class UserDto implements Serializable {
   private Address address;
 
   private PersonDto person;
-
-  private BusinessUnitDto businessUnit;
 
   private String email;
 
