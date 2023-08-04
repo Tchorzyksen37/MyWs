@@ -9,9 +9,9 @@ import pl.tchorzyksen.my.service.backend.model.dto.UserDto
 import pl.tchorzyksen.my.service.backend.model.request.PersonRequest
 import pl.tchorzyksen.my.service.backend.model.request.UserRequest
 import pl.tchorzyksen.my.service.backend.model.response.UserResponse
-import pl.tchorzyksen.my.service.backend.service.BusinessUnitService
+
 import pl.tchorzyksen.my.service.backend.service.UserService
-import pl.tchorzyksen.my.service.backend.service.impl.BusinessUnitServiceImpl
+
 import spock.lang.Specification
 
 class UserControllerSpec extends Specification {
@@ -20,14 +20,12 @@ class UserControllerSpec extends Specification {
 
   UserService userService = Mock(UserService.class)
 
-  BusinessUnitService businessUnitService = Mock(BusinessUnitServiceImpl.class)
-
-  UserController userController = new UserController(userService, businessUnitService, modelMapper)
+  UserController userController = new UserController(userService, modelMapper)
 
   def "Request is correctly mapped and passed to service"() {
     given: "User request model"
     UserRequest model = new UserRequest(email: "test@domain.com",
-            person: new PersonRequest(firstName: "firstName", lastName: "lastName"), password: "test", businessUnitId: null)
+            person: new PersonRequest(firstName: "firstName", lastName: "lastName"), password: "test")
 
     when:
     ResponseEntity<UserResponse> response = userController.createUser(model)

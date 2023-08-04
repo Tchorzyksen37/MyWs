@@ -3,18 +3,14 @@ package pl.tchorzyksen.my.service.backend.orm;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import org.hibernate.Hibernate;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.util.Objects;
 
 @Getter
 @Setter
@@ -34,10 +30,6 @@ public class UserEntity extends AbstractEntity<Long> implements Serializable {
 
   @OneToOne(cascade = CascadeType.ALL)
   private PersonEntity person;
-
-  @ManyToOne
-  @JoinColumn(name = "business_unit_id", referencedColumnName = "id")
-  private BusinessUnitEntity businessUnitEntity;
 
   @Column(name = "email", nullable = false, length = 120, unique = true)
   private String email;

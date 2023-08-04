@@ -1,11 +1,9 @@
 package pl.tchorzyksen.my.service.backend.model.response;
 
-import java.time.LocalDateTime;
-import java.time.OffsetDateTime;
-import java.time.ZonedDateTime;
-
 import lombok.Data;
 import pl.tchorzyksen.my.service.backend.model.Address;
+
+import java.time.LocalDateTime;
 
 @Data
 public class UserResponse {
@@ -21,8 +19,6 @@ public class UserResponse {
   private String userId;
 
   private PersonResponse person;
-
-  private BusinessUnitResponse businessUnit;
 
   private String email;
 
