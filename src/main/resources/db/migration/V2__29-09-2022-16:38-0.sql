@@ -16,9 +16,6 @@ CREATE TABLE users
     person_id                 BIGINT,
     email                     VARCHAR(120) NOT NULL,
     encrypted_password        VARCHAR(255) NOT NULL,
-    email_verification_token  VARCHAR(255),
-    email_verification_status BOOLEAN      NOT NULL,
-    is_active                 BOOLEAN      NOT NULL,
     CONSTRAINT pk_users PRIMARY KEY (id)
 );
 

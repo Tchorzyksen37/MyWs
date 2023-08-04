@@ -37,13 +37,4 @@ public class UserEntity extends AbstractEntity<Long> implements Serializable {
   @Column(name = "encrypted_password", nullable = false)
   private String encryptedPassword;
 
-  @Column(name = "email_verification_token")
-  private String emailVerificationToken;
-
-  @Column(name = "email_verification_status", nullable = false)
-  private Boolean emailVerificationStatus = false;
-
-  @Column(name = "is_active", nullable = false)
-  private Boolean isActive = false;
-
 }
