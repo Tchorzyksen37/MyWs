@@ -1,10 +1,11 @@
 package pl.tchorzyksen.my.service.backend.shared;
 
+import lombok.experimental.UtilityClass;
+
 import java.security.SecureRandom;
 import java.util.Random;
-import org.springframework.stereotype.Component;
 
-@Component
+@UtilityClass
 public class Utils {
 
   private final Random RANDOM = new SecureRandom();
@@ -12,7 +13,7 @@ public class Utils {
   private static final String ALPHABET =
       "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 
-  public String generateUserId(int length) {
+  public static String generateUserId(int length) {
     return generateRandomString(length);
   }
 

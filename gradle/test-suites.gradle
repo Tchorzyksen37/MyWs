@@ -2,6 +2,10 @@ testing {
   suites {
     test {
       useSpock('2.4-M1-groovy-4.0')
+
+      dependencies {
+        runtimeOnly "org.objenesis:objenesis:3.3"
+      }
     }
 
     integrationTest(JvmTestSuite) {
