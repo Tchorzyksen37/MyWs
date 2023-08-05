@@ -1,34 +1,29 @@
 package pl.tchorzyksen.my.service.backend.controller
 
-import org.modelmapper.ModelMapper
 import org.springframework.http.HttpStatus
-import org.springframework.http.ResponseEntity
 import pl.tchorzyksen.my.service.backend.configuration.ModelMapperConfiguration
 import pl.tchorzyksen.my.service.backend.model.dto.PersonDto
 import pl.tchorzyksen.my.service.backend.model.dto.UserDto
 import pl.tchorzyksen.my.service.backend.model.request.PersonRequest
 import pl.tchorzyksen.my.service.backend.model.request.UserRequest
-import pl.tchorzyksen.my.service.backend.model.response.UserResponse
-
 import pl.tchorzyksen.my.service.backend.service.UserService
-
 import spock.lang.Specification
 
 class UserControllerSpec extends Specification {
 
-  ModelMapper modelMapper = new ModelMapperConfiguration().modelMapper()
+  def modelMapper = new ModelMapperConfiguration().modelMapper()
 
-  UserService userService = Mock(UserService.class)
+  def userService = Mock(UserService.class)
 
-  UserController userController = new UserController(userService, modelMapper)
+  def userController = new UserController(userService, modelMapper)
 
   def "Request is correctly mapped and passed to service"() {
     given: "User request model"
-    UserRequest model = new UserRequest(email: "test@domain.com",
+    def model = new UserRequest(email: "test@domain.com",
             person: new PersonRequest(firstName: "firstName", lastName: "lastName"), password: "test")
 
     when:
-    ResponseEntity<UserResponse> response = userController.createUser(model)
+    def response = userController.createUser(model)
 
     then:
     1 * userService.createUser({

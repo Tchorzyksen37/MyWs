@@ -16,7 +16,7 @@ import pl.tchorzyksen.my.service.backend.model.request.UserRequest
 import pl.tchorzyksen.my.service.backend.model.response.UserPageableResponse
 import pl.tchorzyksen.my.service.backend.model.response.UserResponse
 import pl.tchorzyksen.my.service.backend.repositories.UserRepository
-import pl.tchorzyksen.my.service.backend.service.impl.UserServiceImpl
+import pl.tchorzyksen.my.service.backend.service.UserService
 
 import javax.sql.DataSource
 import java.time.Clock
@@ -68,7 +68,7 @@ class UserControllerIntegrationSpec extends AbstractIntegrationSpec {
 
     then:
     response.statusCode == HttpStatus.NOT_FOUND
-    response.getBody().reason() == String.format(ResourceNotFoundException.MESSAGE_FORMAT, UserServiceImpl.RESOURCE_NAME, nonExistingUserId)
+    response.getBody().reason() == String.format(ResourceNotFoundException.MESSAGE_FORMAT, UserService.RESOURCE_NAME, nonExistingUserId)
   }
 
   void "Create user with already existing email address should response with 400 bad request with appropriate reason"() {
@@ -82,7 +82,7 @@ class UserControllerIntegrationSpec extends AbstractIntegrationSpec {
 
     then:
     response.statusCode == HttpStatus.BAD_REQUEST
-    response.getBody().reason() == String.format(UserServiceImpl.NEW_USER_CREATION_FAILED_EMAIL_ALREADY_EXIST, alreadyExistingEmailAddress)
+    response.getBody().reason() == String.format(UserService.NEW_USER_CREATION_FAILED_EMAIL_ALREADY_EXIST, alreadyExistingEmailAddress)
   }
 
   void "Create user happy path"() {
