@@ -22,6 +22,7 @@ class AmazonS3Configuration {
     return AmazonS3ClientBuilder.standard()
             .withCredentials(credentialsProviderChain)
             .withEndpointConfiguration(new EndpointConfiguration(s3Url, "eu-central-1"))
+            .disableChunkedEncoding()
             .build();
   }
 
