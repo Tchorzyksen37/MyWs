@@ -26,6 +26,6 @@ class S3BucketService implements ObjectStorageService {
     var objectMetadata = new ObjectMetadata();
     metadata.forEach(objectMetadata::setHeader);
     log.info("Upload file with key {} to s3 bucket {}", key, bucketName);
-    amazonS3Client.putObject(bucketName, "key", inputStream, objectMetadata);
+    amazonS3Client.putObject(bucketName, key, inputStream, objectMetadata);
   }
 }
