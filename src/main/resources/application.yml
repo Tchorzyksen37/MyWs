@@ -13,7 +13,7 @@ app:
     # base64 encoded secret
     tokenSecret: jf9i4jgu83nfl0adc
   object-storage:
-    url: http://localhost:9000
+    url: http://172.18.0.2:9000
     buckets:
       logo-name: logo
 
