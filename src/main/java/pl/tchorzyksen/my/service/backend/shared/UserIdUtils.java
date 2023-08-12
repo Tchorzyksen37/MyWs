@@ -6,7 +6,7 @@ import java.security.SecureRandom;
 import java.util.Random;
 
 @UtilityClass
-public class Utils {
+public class UserIdUtils {
 
   private final Random RANDOM = new SecureRandom();
 
