@@ -61,7 +61,7 @@ public class AuthorizationFilter extends BasicAuthenticationFilter {
 
       if (user.isPresent()) {
         log.debug("User: {}", user);
-        return new UsernamePasswordAuthenticationToken(user, null, new ArrayList<>());
+        return new UsernamePasswordAuthenticationToken(user.get(), null, new ArrayList<>());
       }
 
     }

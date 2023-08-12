@@ -22,7 +22,7 @@ import static pl.tchorzyksen.my.service.backend.security.SecurityConstants.SIGN_
 @RequiredArgsConstructor
 public class WebSecurity {
 
-  private static final String[] ACCESSIBLE_ENDPOINTS = {"/logo/**", "/greeting/**", "/actuator/**", "/error/**", "/favicon.ico"};
+  private static final String[] ACCESSIBLE_ENDPOINTS = {"/greeting/**", "/actuator/**", "/error/**", "/favicon.ico"};
 
   private final UserService userService;
 

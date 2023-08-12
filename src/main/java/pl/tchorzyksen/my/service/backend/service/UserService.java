@@ -18,7 +18,7 @@ import pl.tchorzyksen.my.service.backend.exception.ResourceNotFoundException;
 import pl.tchorzyksen.my.service.backend.model.dto.UserDto;
 import pl.tchorzyksen.my.service.backend.repositories.UserRepository;
 import pl.tchorzyksen.my.service.backend.orm.UserEntity;
-import pl.tchorzyksen.my.service.backend.shared.Utils;
+import pl.tchorzyksen.my.service.backend.shared.UserIdUtils;
 
 import java.util.ArrayList;
 
@@ -50,7 +50,7 @@ public class UserService implements UserDetailsService {
     }
 
     UserEntity userEntity = mapToEntity(userDto);
-    userEntity.setUserId(Utils.generateUserId(30));
+    userEntity.setUserId(UserIdUtils.generateUserId(30));
     userEntity.setEncryptedPassword(passwordEncoder.encode(userDto.getPassword()));
 
     log.debug("Save UserEntity: {} to database", userEntity);
