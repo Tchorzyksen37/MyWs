@@ -5,8 +5,8 @@ spring:
     url: jdbc:postgresql://localhost:5432/scratchpad
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
-    show-sql: false
-    hibernate.ddl-auto: update
+    show-sql: true
+    hibernate.ddl-auto: create-drop
 
 app:
   security:
