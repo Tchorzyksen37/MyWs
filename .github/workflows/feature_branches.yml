@@ -1,0 +1,9 @@
+name: Feature Branches Pipeline
+run-name: ${{ github.actor }} is learning GitHub Actions
+on: [ push ]
+jobs:
+  greeting-prompt:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Echo
+        run: echo "Hello World !"
