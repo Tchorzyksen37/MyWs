@@ -9,10 +9,7 @@ testing {
     }
 
     integrationTest(JvmTestSuite) {
-      configurations.integrationTestImplementation {
-        extendsFrom(configurations.implementation)
-      }
-
+      testType = TestSuiteType.INTEGRATION_TEST
       dependencies {
         implementation project()
         implementation 'org.springframework.boot:spring-boot-starter-test'
@@ -37,6 +34,11 @@ testing {
     }
 
   }
+}
+
+
+configurations {
+  integrationTestImplementation.extendsFrom(testImplementation)
 }
 
 tasks.named('check') {
