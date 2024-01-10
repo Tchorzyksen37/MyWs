@@ -35,9 +35,9 @@ public class LogoService {
 
   public void saveLogo(Logo logo) {
     var authenticatedUser = authenticationFacade.getAuthenticatedUser();
-    var key = generateKey(authenticatedUser.getUserId(), logo.imageName());
-    objectStorageService.putObject(key, new ByteArrayInputStream(logo.content()),
-            Map.of(CONTENT_TYPE, logo.contentType(), CONTENT_LENGTH, logo.contentLength()));
+    var key = generateKey(authenticatedUser.getUserId(), logo.getImageName());
+    objectStorageService.putObject(key, new ByteArrayInputStream(logo.getContent()),
+            Map.of(CONTENT_TYPE, logo.getContentType(), CONTENT_LENGTH, logo.getContentLength()));
   }
 
   private String generateKey(String userId, String imageName) {

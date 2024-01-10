@@ -49,8 +49,12 @@ class LogoController {
 
   @PostMapping(consumes = {"multipart/form-data"})
   public void uploadLogo(@RequestParam MultipartFile image) throws IOException {
-    var logo = new Logo(image.getOriginalFilename(), image.getSize(),
-            image.getBytes(), image.getContentType());
+    var logo = Logo.builder()
+            .imageName(image.getOriginalFilename())
+            .contentLength(image.getSize())
+            .content(image.getBytes())
+            .contentType(image.getContentType())
+            .build();
     logoService.saveLogo(logo);
   }
 
