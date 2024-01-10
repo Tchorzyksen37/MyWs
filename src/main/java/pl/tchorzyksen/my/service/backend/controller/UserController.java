@@ -60,13 +60,13 @@ public class UserController {
 
   }
 
-  @PutMapping("/{id}")
-  public ResponseEntity<UserResponse> updateUser(@PathVariable Long id, @RequestBody UserRequest userRequest) {
+  @PutMapping
+  public ResponseEntity<UserResponse> updateUser(@RequestBody UserRequest userRequest) {
 
-    log.debug("Update user with id: {} request {}", id, userRequest);
+    log.debug("Update user request {}", userRequest);
     UserDto userDto = mapToDto(userRequest);
 
-    UserDto updatedUserDto = userService.updateUser(id, userDto);
+    UserDto updatedUserDto = userService.updateUser(userDto);
     UserResponse userResponse = mapToResponse(updatedUserDto);
 
     return ResponseEntity.ok(userResponse);

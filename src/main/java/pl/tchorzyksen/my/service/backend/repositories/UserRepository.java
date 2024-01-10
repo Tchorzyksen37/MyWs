@@ -5,9 +5,11 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 import pl.tchorzyksen.my.service.backend.orm.UserEntity;
 
-@Repository
-public interface UserRepository extends PagingAndSortingRepository<UserEntity, Long>, CrudRepository<UserEntity, Long> {
+import java.util.Optional;
 
-  UserEntity findUserByEmail(String email);
+@Repository
+interface UserRepository extends PagingAndSortingRepository<UserEntity, Long>, CrudRepository<UserEntity, Long> {
+
+  Optional<UserEntity> findUserByEmail(String email);
 
 }
