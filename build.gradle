@@ -3,6 +3,9 @@ plugins {
   id 'org.springframework.boot' version '3.2.1'
   id 'io.spring.dependency-management' version '1.1.4'
   id 'org.flywaydb.flyway' version '9.21.1'
+  id "org.sonarqube" version "4.4.1.3373"
+  id 'jacoco'
+  id 'jacoco-report-aggregation'
 }
 
 allprojects {
@@ -47,6 +50,10 @@ dependencies {
 
   implementation 'com.amazonaws:aws-java-sdk-s3:1.12.523'
 
+  subprojects.forEach {
+    jacocoAggregation it
+  }
+
 }
 
 project(':email-sender-service') {
@@ -76,6 +83,29 @@ project(':my-service-backend-api') {
 group = 'pl.tchorzyksen'
 version = '0.1.1-SNAPSHOT'
 description = 'my-service-backend'
-java {
-  sourceCompatibility = JavaVersion.VERSION_19
+
+jacoco {
+  toolVersion = "0.8.11"
+}
+
+jacocoTestReport {
+  reports {
+    xml.required = true
+  }
+}
+
+reporting {
+  reports {
+    testCodeCoverageReport(JacocoCoverageReport) {
+      testType = TestSuiteType.UNIT_TEST
+    }
+    integrationTestCodeCoverageReport(JacocoCoverageReport) {
+      testType = TestSuiteType.INTEGRATION_TEST
+    }
+  }
+}
+
+tasks.named('check') {
+  dependsOn tasks.named('testCodeCoverageReport', JacocoReport)
+  dependsOn tasks.named('integrationTestCodeCoverageReport', JacocoReport)
 }
