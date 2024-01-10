@@ -59,6 +59,18 @@ class UserControllerIntegrationSpec extends AbstractIntegrationSpec {
 
   }
 
+  def "Fetch user by id happy path"() {
+    given:
+    Integer existingUserId = 10
+
+    when:
+    ResponseEntity<UserResponse> response = get("/user/${existingUserId}", UserResponse.class)
+
+    then:
+    response.statusCode == HttpStatus.OK
+    response.getBody().id == existingUserId
+  }
+
   void "Fetch non existing user should response with 404 not found with appropriate reason"() {
     given:
     Integer nonExistingUserId = 720
